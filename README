@@ -1,0 +1,23 @@
+
+
+
+	Goatboy
+
+run: 
+python goatboy.py
+
+needed to run:
+python 2.5
+pygame 
+
+todo:
+interpolating collision detection
+level editor :
+	* edit parameters
+	* save as - functionallity
+More GameObject! =)
+grapplehook
+
+
+
+
