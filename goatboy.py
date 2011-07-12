@@ -8,8 +8,7 @@
 #					    #
 #-'-'-'-'-'-'-'-'-'-'-'-'-'-'-'-'-'-'-'-'-'-#
 import pygame, sys, os, string, random
-from copy import deepcopy
-from pygame.locals import *
+from pygame.locals import KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT, RLEACCEL
 pygame.init()
 window = pygame.display.set_mode(pygame.display.list_modes()[0]) # Fonsterstorlek
 pygame.display.set_caption('Goatboy: the hoorned avanger') #Fonstertitel
@@ -334,10 +333,10 @@ class Map():
 		for index,block in enumerate(self.blocks):
 			f.write(string.join(["block",str(self.initblocks[index][0]),str(self.initblocks[index][1]),str(self.initblocks[index][2]),str(self.initblocks[index][3]),str(self.initblocks[index][4]),block.filename], ':'))
 			f.write('\n')
-		for index,enemy in enumerate(self.enemies):
+		for index in enumerate(self.enemies):
 			f.write(string.join(["flamenemy",str(self.initenemies[index][0]),str(self.initenemies[index][1]),str(self.initenemies[index][2])], ':'))
 			f.write('\n')
-		for index,door in enumerate(self.doors):
+		for index in enumerate(self.doors):
 			f.write(string.join(["door",str(self.initdoors[index][0]),str(self.initdoors[index][1]),self.initdoors[index][2]], ':'))
 			f.write('\n')
 	def loadmap(self,filename):
@@ -439,7 +438,7 @@ class Shot(GameObject):
 	range = 400
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		for index,filename in enumerate(self.filenames):
+		for filename in enumerate(self.filenames):
 			image, self.rect = load_image(filename,-1)
 			self.images.append(image)
 		self.image = self.images[0]
