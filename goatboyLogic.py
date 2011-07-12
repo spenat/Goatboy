@@ -6,30 +6,29 @@
 @author: Mikael					    
 '''
 
-import pygame, sys, os, string, random
-from pygame.locals import KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT, RLEACCEL
+import pygame, os, string, random
+from pygame.locals import RLEACCEL
 
-pygame.init()
-
-global allsprites, window, screen, background, clock, leveleditor
-
-window = pygame.display.set_mode(pygame.display.list_modes()[0]) # Fonsterstorlek
-screen = pygame.display.get_surface() # Skarmyta
-back_file_name = os.path.join("data", "background.bmp") # bakgrundsfilnamnsokvag
-back_surface = pygame.image.load(back_file_name)
-clock = pygame.time.Clock()
-background = pygame.Surface(screen.get_size())
-scrollx = 0
-scrolly = 0
-scoore = 0
-scooresurface = pygame.Surface((50, 25))
-leveleditor = None
-
-pygame.display.set_caption('Goatboy: the hoorned avanger') #Fonstertitel
-pygame.display.flip()
-background.blit(back_surface, (0, 0))
-
-def startGame(startLevel="map2.map"):
+def initializeGame(startLevel="map2.map"):
+	pygame.init()
+	
+	global allsprites, window, screen, background, clock, leveleditor, scrollx, scrolly, scoore, scooresurface, back_surface
+	
+	window = pygame.display.set_mode(pygame.display.list_modes()[0]) # Fonsterstorlek
+	screen = pygame.display.get_surface() # Skarmyta
+	back_file_name = os.path.join("data", "background.bmp") # bakgrundsfilnamnsokvag
+	back_surface = pygame.image.load(back_file_name)
+	clock = pygame.time.Clock()
+	background = pygame.Surface(screen.get_size())
+	scrollx = 0
+	scrolly = 0
+	scoore = 0
+	scooresurface = pygame.Surface((50, 25))
+	leveleditor = None
+	
+	pygame.display.set_caption('Goatboy: the hoorned avanger') #Fonstertitel
+	pygame.display.flip()
+	background.blit(back_surface, (0, 0))
 	
 	map = Map()     # skapa ett map-objekt
 	map.loadmap(startLevel) # ladda banan fran fil
@@ -376,7 +375,8 @@ class Map():
 	initenemies = []
 	initblocks = []
 	initdoors = []
-
+	name = None
+	
 	def addBlock(self, block):
 		self.blocks.append(block)
 		self.initblocks.append([block.x, block.y, block.leftlimit, block.rightlimit, block.dx])
@@ -435,6 +435,7 @@ class Map():
 			f.write('\n')
 
 	def loadmap(self, filename):
+		self.name = filename
 		self.blocks = []
 		self.enemies = []
 		self.doors = []
@@ -570,45 +571,3 @@ class Shot(GameObject):
 			map.shots.remove(self)
 			map.enemies[self.rect.collidelist(map.enemies)].die()
 			loadvisible()
-		
-def input(events):
-	'''
-	Input - hanteraren
-	'''
-	global thor
-	for event in events:
-		if event.type == QUIT:
-			sys.exit()
-		elif event.type == KEYDOWN:
-			if event.key == 275 or event.key == 100: 		# Tryck hoger lr d
-				thor.move_right()
-			elif event.key == 276 or event.key == 97:		# Tryck vanster lr a
-				thor.move_left()
-			elif event.key == 274:					# Tryck ner
-				thor.move_down()
-			elif event.key == 273 or event.key == 119:		# Tryck upp lr w
-				thor.move_up()
-			elif event.key == 120:
-				thor.changeweapon()
-			elif event.key == 27:		# Tryck escape
-				sys.exit()
-			elif event.key == 112:		# Tryck p for save current map
-				map.savemap(os.path.join('data', mapname))
-			elif event.key == 32 or event.key == 102:		# Tryck space for SKJUT!
-				thor.shooting = True
-			else:
-				print event
-		elif event.type == KEYUP:
-			if event.key == 275 or event.key == 276 or event.key == 100 or event.key == 97: # Lyft hoger eller vanster
-				thor.stop()
-			elif event.key == 32 or event.key == 102:
-				thor.shooting = False
-		elif event.type == MOUSEBUTTONDOWN:
-			if event.button == 1: 		# Tryck vanster musknapp for skapa valt objekt
-				leveleditor.createGO()
-			elif event.button == 3:		# Tryck hoger  mosknapp for vaxla objekt
-				leveleditor.changeGO()
-		elif event.type == MOUSEMOTION:
-				leveleditor.setposition(event.pos[0], event.pos[1]) # muspekaren flyttar leveleditorn
-		else:
-			print event
