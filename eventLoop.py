@@ -5,43 +5,43 @@ Created on 12 jul 2011
 @author: mikael
 '''
 
-import goatboyLogic, pygame, sys, os
+import gameLogic, pygame, sys, os
 from pygame.locals import KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT
 
-def proceed():
+def proceed(gameState):
+    gs = gameState
     
-    thor = goatboyLogic.getThor()
-    map = goatboyLogic.getMap()
-    
-    goatboyLogic.getClock().tick(60)                     # Delay
-    goatboyLogic.getScreen().blit(goatboyLogic.getBackground(), (0, 0)) # Rita bakgrunden
-    if thor.boneRect.collidelist(map.blocks) != -1:                     # Testa goatboys ben mot alla block
-        if thor.dy > 0:             # Om man nuddar ett block pa vagen ner,
-            thor.dy = 0             # faller man inte langre nedat
-            thor.onGround = True    # och har fotterna pa fast mark.
+    gs.clock.tick(60)                     # Delay
+    gs.screen.blit(gs.background, (0, 0)) # Rita bakgrunden
+    if gs.thor.boneRect.collidelist(gs.map.blocks) != -1:                     # Testa goatboys ben mot alla block
+        if gs.thor.dy > 0:             # Om man nuddar ett block pa vagen ner,
+            gs.thor.dy = 0             # faller man inte langre nedat
+            gs.thor.onGround = True    # och har fotterna pa fast mark.
     else:
-        thor.onGround = False # nuddar man inget block, star man inte pa marken
-    if thor.rect.collidelist(map.enemies) != -1:
-        goatboyLogic.reset()
-    elif thor.rect.collidelist(map.doors) != -1:
-        map.doors[thor.rect.collidelist(map.doors)].open() # Oppna dorren
-        goatboyLogic.reset()
-    thor.update()
-    goatboyLogic.getLeveleditor().update()
-    map.update()
+        gs.thor.onGround = False # nuddar man inget block, star man inte pa marken
+    if gs.thor.rect.collidelist(gs.map.enemies) != -1:
+        gameLogic.reset(gs)
+    elif gs.thor.rect.collidelist(gs.map.doors) != -1:
+        gs.map.doors[gs.thor.rect.collidelist(gs.map.doors)].open() # Oppna dorren
+        gameLogic.reset()
+    gs.thor.update(gs)
+    gs.leveleditor.update()
+    gs.map.update(gs)
     if pygame.event.peek(): # Titta om det finns en event i event-kon
-        handleInput(pygame.event.get()) # Om det finns skicka event till input()
-    goatboyLogic.getAllSprites().draw(goatboyLogic.getScreen()) # Rita alla sprites
+        handleInput(pygame.event.get(), gs) # Om det finns skicka event till input()
+    gs.allsprites.draw(gs.screen) # Rita alla sprites
     pygame.display.flip()   # vand fram dubbelbufferten
     
     
-def handleInput(events):
+def handleInput(events, gameState):
     '''
     Input - hanteraren
     '''
-    thor = goatboyLogic.getThor()
-    map = goatboyLogic.getMap()
-    leveleditor = goatboyLogic.getLeveleditor()
+    gs = gameState
+    
+    thor = gs.thor
+    map = gs.map
+    leveleditor = gs.leveleditor
     
     for event in events:
         if event.type == QUIT:
