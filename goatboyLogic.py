@@ -10,19 +10,77 @@ import pygame, sys, os, string, random
 from pygame.locals import KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT, RLEACCEL
 
 pygame.init()
+
+global allsprites, window, screen, background, clock, leveleditor
+
 window = pygame.display.set_mode(pygame.display.list_modes()[0]) # Fonsterstorlek
-pygame.display.set_caption('Goatboy: the hoorned avanger') #Fonstertitel
 screen = pygame.display.get_surface() # Skarmyta
 back_file_name = os.path.join("data", "background.bmp") # bakgrundsfilnamnsokvag
 back_surface = pygame.image.load(back_file_name)
-pygame.display.flip()
 clock = pygame.time.Clock()
 background = pygame.Surface(screen.get_size())
-background.blit(back_surface, (0, 0))
 scrollx = 0
 scrolly = 0
 scoore = 0
 scooresurface = pygame.Surface((50, 25))
+leveleditor = None
+
+pygame.display.set_caption('Goatboy: the hoorned avanger') #Fonstertitel
+pygame.display.flip()
+background.blit(back_surface, (0, 0))
+
+def startGame(startLevel="map2.map"):
+	
+	map = Map()     # skapa ett map-objekt
+	map.loadmap(startLevel) # ladda banan fran fil
+
+	thor = Goatboy() # skapa ett goatboy-objekt =)
+	leveleditor = LevelEditor()
+	
+	setLevelEditor(leveleditor)
+	setThor(thor)
+	setMap(map)
+	loadvisible()
+
+def getLeveleditor():
+	global leveleditor
+	return leveleditor
+
+def getScreen():
+	global screen
+	return screen
+
+def getClock():
+	global clock
+	return clock
+
+def getAllSprites():
+	global allsprites
+	return allsprites
+
+def getBackground():
+	global background
+	return background
+
+def setMap(newMap):
+	global map
+	map = newMap
+
+def getMap():
+	global map
+	return map
+
+def getThor():
+	global thor
+	return thor
+	
+def setThor(newThor):
+	global thor
+	thor = newThor
+	
+def setLevelEditor(newLevelEditor):
+	global leveleditor
+	leveleditor = newLevelEditor
 
 def load_image(name, colorkey=None):
 	fullname = os.path.join('data', name)
@@ -248,7 +306,6 @@ class Flamenemy(GameObject):
 		scoore = scoore + 1
 		map.enemies.remove(self)
 
-
 class Flameboy(GameObject):
 	'''
 	Flameboy
@@ -454,7 +511,6 @@ class LevelEditor(GameObject):
 	def update(self):
 		self.rect.topleft = self.x, self.y
 
-
 class Door(GameObject):
 	'''
 	Door class
@@ -485,7 +541,7 @@ class Shot(GameObject):
 
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		for filename in enumerate(self.filenames):
+		for filename in self.filenames:
 			image, self.rect = load_image(filename, -1)
 			self.images.append(image)
 		self.image = self.images[0]
@@ -515,15 +571,6 @@ class Shot(GameObject):
 			map.enemies[self.rect.collidelist(map.enemies)].die()
 			loadvisible()
 		
-# -- Alla objekt och deras utgangsvarden :
-
-leveleditor = LevelEditor()
-thor = Goatboy() # skapa ett goatboy-objekt =)
-map = Map()	 # skapa ett map-objekt
-mapname = "map2.map"
-map.loadmap(mapname) # ladda banan fran fil
-loadvisible()
-
 def input(events):
 	'''
 	Input - hanteraren
@@ -565,28 +612,3 @@ def input(events):
 				leveleditor.setposition(event.pos[0], event.pos[1]) # muspekaren flyttar leveleditorn
 		else:
 			print event
-
-# -- The Main Loop -- #
-
-while True:
-	clock.tick(60) 					# Delay
-	screen.blit(background, (0, 0)) 			# Rita bakgrunden
-	if thor.boneRect.collidelist(map.blocks) != -1: # Testa goatboys ben mot alla block
-		if thor.dy > 0: 			# Om man nuddar ett block pa vagen ner,
-			thor.dy = 0 			# faller man inte langre nedat
-			thor.onGround = True 		# och har fotterna pa fast mark.
-	else:
-		thor.onGround = False # nuddar man inget block, star man inte pa marken
-	if thor.rect.collidelist(map.enemies) != -1:
-		reset()
-	elif thor.rect.collidelist(map.doors) != -1:
-		map.doors[thor.rect.collidelist(map.doors)].open() # Oppna dorren
-		reset()
-	thor.update()
-	leveleditor.update()
-	map.update()
-	if pygame.event.peek(): # Titta om det finns en event i event-kon
-		input(pygame.event.get()) # Om det finns skicka event till input()
-	allsprites.draw(screen) # Rita alla sprites
-	pygame.display.flip()   # vand fram dubbelbufferten
-
