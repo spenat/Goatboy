@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>gameLogic</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Module&nbsp;gameLogic
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="gameLogic-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="gameLogic-module.html">Module gameLogic</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-docstring">'''</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">        Goatboy : The jumpin' jackass</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">        </tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring">@note: hejhej    </tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">@author: Mikael                                     </tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">'''</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt><tt class="py-op">,</tt> <tt class="py-name">pygame</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pygame</tt><tt class="py-op">.</tt><tt class="py-name">locals</tt> <tt class="py-keyword">import</tt> <tt class="py-name">RLEACCEL</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"> </tt>
+<a name="loadvisible"></a><div id="loadvisible-def"><a name="L12"></a><tt class="py-lineno">12</tt> <a class="py-toggle" href="#" id="loadvisible-toggle" onclick="return toggle('loadvisible');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gameLogic-module.html#loadvisible">loadvisible</a><tt class="py-op">(</tt><tt class="py-param">gameState</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="loadvisible-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="loadvisible-expanded"><a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line">    <tt id="link-0" class="py-name" targets="Variable gameObjects.Block.gs=gameObjects.Block-class.html#gs"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-0', 'gs', 'link-0');">gs</a></tt> <tt class="py-op">=</tt> <tt id="link-1" class="py-name" targets="Module gameState=gameState-module.html"><a title="gameState" class="py-name" href="#" onclick="return doclink('link-1', 'gameState', 'link-1');">gameState</a></tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">    <tt id="link-2" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-2', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Variable gameState.GameState.allsprites=gameState.GameState-class.html#allsprites"><a title="gameState.GameState.allsprites" class="py-name" href="#" onclick="return doclink('link-3', 'allsprites', 'link-3');">allsprites</a></tt> <tt class="py-op">=</tt> <tt class="py-name">pygame</tt><tt class="py-op">.</tt><tt class="py-name">sprite</tt><tt class="py-op">.</tt><tt class="py-name">RenderPlain</tt><tt class="py-op">(</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt id="link-4" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-4', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Variable gameState.GameState.map=gameState.GameState-class.html#map"><a title="gameState.GameState.map" class="py-name" href="#" onclick="return doclink('link-5', 'map', 'link-5');">map</a></tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Variable mapLogic.Map.shots=mapLogic.Map-class.html#shots"><a title="mapLogic.Map.shots" class="py-name" href="#" onclick="return doclink('link-6', 'shots', 'link-6');">shots</a></tt><tt class="py-op">,</tt> <tt id="link-7" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-7', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-8" class="py-name"><a title="gameState.GameState.map" class="py-name" href="#" onclick="return doclink('link-8', 'map', 'link-5');">map</a></tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Variable mapLogic.Map.blocks=mapLogic.Map-class.html#blocks"><a title="mapLogic.Map.blocks" class="py-name" href="#" onclick="return doclink('link-9', 'blocks', 'link-9');">blocks</a></tt><tt class="py-op">,</tt> <tt id="link-10" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-10', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="gameState.GameState.map" class="py-name" href="#" onclick="return doclink('link-11', 'map', 'link-5');">map</a></tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Variable mapLogic.Map.enemies=mapLogic.Map-class.html#enemies"><a title="mapLogic.Map.enemies" class="py-name" href="#" onclick="return doclink('link-12', 'enemies', 'link-12');">enemies</a></tt><tt class="py-op">,</tt> <tt id="link-13" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-13', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-14" class="py-name"><a title="gameState.GameState.map" class="py-name" href="#" onclick="return doclink('link-14', 'map', 'link-5');">map</a></tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Variable mapLogic.Map.doors=mapLogic.Map-class.html#doors"><a title="mapLogic.Map.doors" class="py-name" href="#" onclick="return doclink('link-15', 'doors', 'link-15');">doors</a></tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt id="link-16" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-16', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-17" class="py-name" targets="Variable gameState.GameState.leveleditor=gameState.GameState-class.html#leveleditor"><a title="gameState.GameState.leveleditor" class="py-name" href="#" onclick="return doclink('link-17', 'leveleditor', 'link-17');">leveleditor</a></tt><tt class="py-op">,</tt> <tt id="link-18" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-18', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-19" class="py-name" targets="Variable gameState.GameState.thor=gameState.GameState-class.html#thor"><a title="gameState.GameState.thor" class="py-name" href="#" onclick="return doclink('link-19', 'thor', 'link-19');">thor</a></tt><tt class="py-op">]</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> <tt class="py-comment"># Alla sprites som ska ritas</tt> </tt>
+</div><a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"> </tt>
+<a name="reset"></a><div id="reset-def"><a name="L16"></a><tt class="py-lineno">16</tt> <a class="py-toggle" href="#" id="reset-toggle" onclick="return toggle('reset');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gameLogic-module.html#reset">reset</a><tt class="py-op">(</tt><tt class="py-param">gameState</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="reset-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="reset-expanded"><a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">    <tt id="link-20" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-20', 'gs', 'link-0');">gs</a></tt> <tt class="py-op">=</tt> <tt id="link-21" class="py-name"><a title="gameState" class="py-name" href="#" onclick="return doclink('link-21', 'gameState', 'link-1');">gameState</a></tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">    <tt class="py-string">'''</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-string">    Satt alla varden till utgangsvarden</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-string">        '''</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">    <tt id="link-22" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-22', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-23" class="py-name" targets="Variable gameState.GameState.scrollx=gameState.GameState-class.html#scrollx"><a title="gameState.GameState.scrollx" class="py-name" href="#" onclick="return doclink('link-23', 'scrollx', 'link-23');">scrollx</a></tt><tt class="py-op">,</tt> <tt id="link-24" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-24', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-25" class="py-name" targets="Variable gameState.GameState.scrolly=gameState.GameState-class.html#scrolly"><a title="gameState.GameState.scrolly" class="py-name" href="#" onclick="return doclink('link-25', 'scrolly', 'link-25');">scrolly</a></tt><tt class="py-op">,</tt> <tt id="link-26" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-26', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="gameState.GameState.thor" class="py-name" href="#" onclick="return doclink('link-27', 'thor', 'link-19');">thor</a></tt><tt class="py-op">.</tt><tt id="link-28" class="py-name" targets="Variable gameObjects.Block.dx=gameObjects.Block-class.html#dx,Variable gameObjects.Goatboy.dx=gameObjects.Goatboy-class.html#dx"><a title="gameObjects.Block.dx
+gameObjects.Goatboy.dx" class="py-name" href="#" onclick="return doclink('link-28', 'dx', 'link-28');">dx</a></tt><tt class="py-op">,</tt> <tt id="link-29" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-29', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="gameState.GameState.thor" class="py-name" href="#" onclick="return doclink('link-30', 'thor', 'link-19');">thor</a></tt><tt class="py-op">.</tt><tt id="link-31" class="py-name" targets="Variable gameObjects.Goatboy.ddx=gameObjects.Goatboy-class.html#ddx"><a title="gameObjects.Goatboy.ddx" class="py-name" href="#" onclick="return doclink('link-31', 'ddx', 'link-31');">ddx</a></tt><tt class="py-op">,</tt> <tt id="link-32" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-32', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="gameState.GameState.thor" class="py-name" href="#" onclick="return doclink('link-33', 'thor', 'link-19');">thor</a></tt><tt class="py-op">.</tt><tt id="link-34" class="py-name" targets="Variable gameObjects.Goatboy.dy=gameObjects.Goatboy-class.html#dy"><a title="gameObjects.Goatboy.dy" class="py-name" href="#" onclick="return doclink('link-34', 'dy', 'link-34');">dy</a></tt><tt class="py-op">,</tt> <tt id="link-35" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-35', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-36" class="py-name" targets="Variable gameState.GameState.scoore=gameState.GameState-class.html#scoore"><a title="gameState.GameState.scoore" class="py-name" href="#" onclick="return doclink('link-36', 'scoore', 'link-36');">scoore</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">    <tt id="link-37" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-37', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-38" class="py-name"><a title="gameState.GameState.map" class="py-name" href="#" onclick="return doclink('link-38', 'map', 'link-5');">map</a></tt><tt class="py-op">.</tt><tt id="link-39" class="py-name" targets="Function gameLogic.reset()=gameLogic-module.html#reset,Method gameObjects.Flameboy.reset()=gameObjects.Flameboy-class.html#reset,Method gameObjects.Flamenemy.reset()=gameObjects.Flamenemy-class.html#reset,Method mapLogic.Map.reset()=mapLogic.Map-class.html#reset"><a title="gameLogic.reset
+gameObjects.Flameboy.reset
+gameObjects.Flamenemy.reset
+mapLogic.Map.reset" class="py-name" href="#" onclick="return doclink('link-39', 'reset', 'link-39');">reset</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">    <tt id="link-40" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-40', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-41" class="py-name"><a title="gameState.GameState.thor" class="py-name" href="#" onclick="return doclink('link-41', 'thor', 'link-19');">thor</a></tt><tt class="py-op">.</tt><tt id="link-42" class="py-name" targets="Method gameObjects.GameObject.setposition()=gameObjects.GameObject-class.html#setposition"><a title="gameObjects.GameObject.setposition" class="py-name" href="#" onclick="return doclink('link-42', 'setposition', 'link-42');">setposition</a></tt><tt class="py-op">(</tt><tt class="py-number">300</tt><tt class="py-op">,</tt> <tt class="py-number">150</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">    <tt id="link-43" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-43', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-44" class="py-name" targets="Variable gameState.GameState.background=gameState.GameState-class.html#background"><a title="gameState.GameState.background" class="py-name" href="#" onclick="return doclink('link-44', 'background', 'link-44');">background</a></tt><tt class="py-op">.</tt><tt class="py-name">blit</tt><tt class="py-op">(</tt><tt id="link-45" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-45', 'gs', 'link-0');">gs</a></tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Variable gameState.GameState.back_surface=gameState.GameState-class.html#back_surface"><a title="gameState.GameState.back_surface" class="py-name" href="#" onclick="return doclink('link-46', 'back_surface', 'link-46');">back_surface</a></tt><tt class="py-op">,</tt> <tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">    <tt id="link-47" class="py-name" targets="Function gameLogic.loadvisible()=gameLogic-module.html#loadvisible"><a title="gameLogic.loadvisible" class="py-name" href="#" onclick="return doclink('link-47', 'loadvisible', 'link-47');">loadvisible</a></tt><tt class="py-op">(</tt><tt id="link-48" class="py-name"><a title="gameObjects.Block.gs" class="py-name" href="#" onclick="return doclink('link-48', 'gs', 'link-0');">gs</a></tt><tt class="py-op">)</tt> </tt>
+</div><a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"> </tt>
+<a name="load_image"></a><div id="load_image-def"><a name="L27"></a><tt class="py-lineno">27</tt> <a class="py-toggle" href="#" id="load_image-toggle" onclick="return toggle('load_image');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="gameLogic-module.html#load_image">load_image</a><tt class="py-op">(</tt><tt class="py-param">name</tt><tt class="py-op">,</tt> <tt class="py-param">colorkey</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="load_image-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="load_image-expanded"><a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">    <tt class="py-name">fullname</tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-string">'data'</tt><tt class="py-op">,</tt> <tt id="link-49" class="py-name" targets="Variable mapLogic.Map.name=mapLogic.Map-class.html#name"><a title="mapLogic.Map.name" class="py-name" href="#" onclick="return doclink('link-49', 'name', 'link-49');">name</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">    <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">        <tt class="py-name">image</tt> <tt class="py-op">=</tt> <tt class="py-name">pygame</tt><tt class="py-op">.</tt><tt class="py-name">image</tt><tt class="py-op">.</tt><tt class="py-name">load</tt><tt class="py-op">(</tt><tt class="py-name">fullname</tt><tt class="py-op">)</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">    <tt class="py-keyword">except</tt> <tt class="py-name">pygame</tt><tt class="py-op">.</tt><tt class="py-name">error</tt><tt class="py-op">,</tt> <tt class="py-name">message</tt><tt class="py-op">:</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">"Cannot load image:"</tt><tt class="py-op">,</tt> <tt id="link-50" class="py-name"><a title="mapLogic.Map.name" class="py-name" href="#" onclick="return doclink('link-50', 'name', 'link-49');">name</a></tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">        <tt class="py-keyword">raise</tt> <tt class="py-name">SystemExit</tt><tt class="py-op">,</tt> <tt class="py-name">message</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">    <tt class="py-name">image</tt> <tt class="py-op">=</tt> <tt class="py-name">image</tt><tt class="py-op">.</tt><tt class="py-name">convert</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">colorkey</tt> <tt class="py-keyword">is</tt> <tt class="py-keyword">not</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">colorkey</tt> <tt class="py-keyword">is</tt> <tt class="py-op">-</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">            <tt class="py-name">colorkey</tt> <tt class="py-op">=</tt> <tt class="py-name">image</tt><tt class="py-op">.</tt><tt class="py-name">get_at</tt><tt class="py-op">(</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt> <tt class="py-number">0</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">        <tt class="py-name">image</tt><tt class="py-op">.</tt><tt class="py-name">set_colorkey</tt><tt class="py-op">(</tt><tt class="py-name">colorkey</tt><tt class="py-op">,</tt> <tt class="py-name">RLEACCEL</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">image</tt><tt class="py-op">,</tt> <tt class="py-name">image</tt><tt class="py-op">.</tt><tt class="py-name">get_rect</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Tue Jul 12 23:32:41 2011
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
