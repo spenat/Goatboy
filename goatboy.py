@@ -13,16 +13,16 @@ pygame.init()
 window = pygame.display.set_mode(pygame.display.list_modes()[0]) # Fonsterstorlek
 pygame.display.set_caption('Goatboy: the hoorned avanger') #Fonstertitel
 screen = pygame.display.get_surface() # Skarmyta
-back_file_name = os.path.join("data","background.bmp") # bakgrundsfilnamnsokvag
+back_file_name = os.path.join("data", "background.bmp") # bakgrundsfilnamnsokvag
 back_surface = pygame.image.load(back_file_name)
 pygame.display.flip()
 clock = pygame.time.Clock()
 background = pygame.Surface(screen.get_size())
-background.blit(back_surface,(0,0))
+background.blit(back_surface, (0, 0))
 scrollx = 0
 scrolly = 0
 scoore = 0
-scooresurface = pygame.Surface((50,25))
+scooresurface = pygame.Surface((50, 25))
 
 def load_image(name, colorkey=None):
 	fullname = os.path.join('data', name)
@@ -33,41 +33,41 @@ def load_image(name, colorkey=None):
 		raise SystemExit, message
 	image = image.convert()
 	if colorkey is not None:
-		if colorkey is -1:
-			colorkey = image.get_at((0,0))
+		if colorkey is - 1:
+			colorkey = image.get_at((0, 0))
 		image.set_colorkey(colorkey, RLEACCEL)
 	return image, image.get_rect()
 
 def loadvisible():
 	global allsprites
-	allsprites = pygame.sprite.RenderPlain(sum([map.shots,map.blocks,map.enemies,map.doors,[leveleditor,thor]],[])) # Alla sprites som ska ritas
+	allsprites = pygame.sprite.RenderPlain(sum([map.shots, map.blocks, map.enemies, map.doors, [leveleditor, thor]], [])) # Alla sprites som ska ritas
 
 def reset():   # Satt alla varden till utgangsvarden
-	global scrollx,scrolly,thor,scoore,map,allsprites
-	scrollx,scrolly,thor.dx,thor.ddx,thor.dy,scoore = 0,0,0,0,0,0
+	global scrollx, scrolly, thor, scoore, map, allsprites
+	scrollx, scrolly, thor.dx, thor.ddx, thor.dy, scoore = 0, 0, 0, 0, 0, 0
 	map.reset()
-	thor.setposition(300,150)
-	background.blit(back_surface,(0,0))
+	thor.setposition(300, 150)
+	background.blit(back_surface, (0, 0))
 	loadvisible()
 
 class GameObject(pygame.sprite.Sprite):
-	x,y = 0,0
+	x, y = 0, 0
 	filename = 'door.bmp'
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image, self.rect = load_image(self.filename,-1)
-	def setposition(self,x,y): # Satt blockets startposition
-		self.x, self.y = x,y
-	def setimage(self,imagename,colorkey):
+		self.image, self.rect = load_image(self.filename, -1)
+	def setposition(self, x, y): # Satt blockets startposition
+		self.x, self.y = x, y
+	def setimage(self, imagename, colorkey):
 		self.filename = imagename
-		self.image, self.rect = load_image(imagename,colorkey)
+		self.image, self.rect = load_image(imagename, colorkey)
 
 
 # -- This is Goatboy -- #
 
 class Goatboy(GameObject):
-	x=300
-	y=150
+	x = 300
+	y = 150
 	onGround = True    # Star goatboy pa marken?
 	turnedRight = True # Ar goatboy vand at hoger?
 	rightDown = False  # Ar hogerknappen nedtryckt?
@@ -83,13 +83,13 @@ class Goatboy(GameObject):
 	dx = 0	# Goatboys momentana hastighet i x-led
 	dy = 0	# -"- y-led
 	ddx = 0 # Goatboys acceleration i x-led
-	boneRect = pygame.Rect(x+30,y+74,22,1)	# Bonerect is his feets that are collition tested againts ground later on
+	boneRect = pygame.Rect(x + 30, y + 74, 22, 1)	# Bonerect is his feets that are collition tested againts ground later on
 	def __init__(self):			# Initiera goatboy
 		pygame.sprite.Sprite.__init__(self) 			# Ladda en sprite
-		self.image, self.rect = load_image('goatboy.bmp',-1) 	# Ladda bilden pa goatboy
+		self.image, self.rect = load_image('goatboy.bmp', -1) 	# Ladda bilden pa goatboy
 		screen = pygame.display.get_surface()			# Lagg skarmytan i screen
 	def update(self):			#  update() updates goatboy every loop
-		global scrollx,scrolly,reset				
+		global scrollx, scrolly, reset				
 		self.x = self.x + self.dx	# Flytta goatboy i hans horisontella hastighet
 		if self.dx < self.maxspeed and self.dx > -self.maxspeed: # Om goatboys maxhastiget inte ar mott,
 			self.dx = self.dx + self.ddx			 # oka hans hastighet med hans acceleration
@@ -97,10 +97,10 @@ class Goatboy(GameObject):
 		if self.dy > 100:		# Om goatboy faller fortare an 100
 			reset()			# Reset game
 		if self.shooting:
-			if random.randint(1,2) == 2:
+			if random.randint(1, 2) == 2:
 				shot = Shot()
 				shot.limit = self.weapon
-				shot.dy = random.randint(-self.weapon,self.weapon)
+				shot.dy = random.randint(-self.weapon, self.weapon)
 				if shot.dy < 0:
 					shot.ddy = -1
 				else:
@@ -109,7 +109,7 @@ class Goatboy(GameObject):
 			loadvisible()
 		# -- This is the frame of goatboys scroll :
 		if self.y > self.bottomscroll:
-			scrolly = scrolly + (self.bottomscroll - self.y )
+			scrolly = scrolly + (self.bottomscroll - self.y)
 			self.y = self.bottomscroll
 		elif self.y < self.topscroll:
 			scrolly = scrolly - (self.y - self.topscroll)
@@ -124,25 +124,25 @@ class Goatboy(GameObject):
 		if not self.onGround:
 			self.dy = self.dy + 1
 		self.rect.topleft = self.x, self.y # Satt goatboys sprite till hans nya koordinater
-		self.boneRect = pygame.Rect(self.x+30,self.y+74,22,1)	# Flytta fotterna efter de nya koordinaterna
+		self.boneRect = pygame.Rect(self.x + 30, self.y + 74, 22, 1)	# Flytta fotterna efter de nya koordinaterna
 	def move_right(self):
-		self.ddx=1 # Nar goatboy flyttar at hoger ar hans acceleration positiv
-		self.rightDown=True 	# Hogerknappen ar nedtryckt
+		self.ddx = 1 # Nar goatboy flyttar at hoger ar hans acceleration positiv
+		self.rightDown = True 	# Hogerknappen ar nedtryckt
 		if not self.turnedRight:					# Om goatboy inte ar vand at hoger, 
-			self.image = pygame.transform.flip(self.image,1,0) 	# vand pa hans bild
+			self.image = pygame.transform.flip(self.image, 1, 0) 	# vand pa hans bild
 			self.turnedRight = True					# och sag att han e vand at hoger
 	def move_left(self):
-		self.ddx=-1 		# Nar goatboy flyttar at vanster ar hans acceleration negativ
-		self.leftDown=True 	# vansterknappen ar nedtryckt
+		self.ddx = -1 		# Nar goatboy flyttar at vanster ar hans acceleration negativ
+		self.leftDown = True 	# vansterknappen ar nedtryckt
 		if self.turnedRight: 	# Om goatboy ar vand at hoger,
-			self.image = pygame.transform.flip(self.image,1,0) # vand pa hans bild
+			self.image = pygame.transform.flip(self.image, 1, 0) # vand pa hans bild
 			self.turnedRight = False	# goatboy ar inte langre vand at hoger
 	def move_up(self):
 		if self.onGround: 			# Om goatboy star pa marken,
-			self.dy=self.dy-self.jumpheight # Hoppa!
+			self.dy = self.dy - self.jumpheight # Hoppa!
 			self.onGround = False 		# Goatboy star inte langre pa marken
 	def move_down(self):
-		self.dy=self.dy+1
+		self.dy = self.dy + 1
 	def stop(self):				      # stop() kallas da man slapper hoger eller vanster.
 		if self.rightDown and self.ddx == -1: # Om goatboy ar pa vag at vanster men trycker at hoger,
 			self.dx = self.dx / 2	      # halvera goatboys hastighet.
@@ -158,7 +158,7 @@ class Goatboy(GameObject):
 	def get_x(self):
 		return self.x
 	def changeweapon(self):
-		self.weapon=(self.weapon+2)%16
+		self.weapon = (self.weapon + 2) % 16
 	def get_y(self):
 		return self.y
 
@@ -173,10 +173,10 @@ class Block(GameObject):
 	filename = 'blockgrass.bmp'
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image, self.rect = load_image(self.filename,-1) # Ladda default-bild
+		self.image, self.rect = load_image(self.filename, -1) # Ladda default-bild
 		self.dx = 0
 	def update(self):
-		global scrollx,scrolly,scoore
+		global scrollx, scrolly, scoore
 		self.x = self.x + self.dx
 		if self.rect.w + self.x > self.rightlimit or self.x < self.leftlimit: # Om blocket ar utanfor vandpunkterna,
 			self.dx = -self.dx					      # byt hall.
@@ -185,9 +185,9 @@ class Block(GameObject):
 		#	scoore = scoore + 1
 		#	print scoore
 		self.rect.topleft = self.x + scrollx, self.y + scrolly # Flytta blockets sprite i forhallande till scrollen
-	def setdx(self,dx):
+	def setdx(self, dx):
 		self.dx = dx # Blockets horisontella hastighet
-	def setlimits(self,leftlimit,rightlimit): # Satt blockets vandpunkter
+	def setlimits(self, leftlimit, rightlimit): # Satt blockets vandpunkter
 		self.leftlimit = leftlimit
 		self.rightlimit = rightlimit
 
@@ -199,18 +199,18 @@ class Flamenemy(GameObject):
 	kind = 0
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image, self.rect = load_image('flamenemy.bmp',-1) # Ladda default-bild
-		self.dx,self.dy = random.randint(-10,10),random.randint(-5,5)
-		self.ddx,self.ddy = 1,-1
+		self.image, self.rect = load_image('flamenemy.bmp', -1) # Ladda default-bild
+		self.dx, self.dy = random.randint(-10, 10), random.randint(-5, 5)
+		self.ddx, self.ddy = 1, -1
 	def update(self):
-		global scrollx,scrolly,scoore
+		global scrollx, scrolly, scoore
 		self.x = self.x + self.dx
 		self.dx = self.dx + self.ddx
 		self.y = self.y + self.dy
 		self.dy = self.dy + self.ddy
 		if self.dx > 20 or self.dx < -20: # Om blocket ar utanfor vandpunkterna,
 			self.ddx = -self.ddx
-			self.image = pygame.transform.flip(self.image,1,0)			      # byt hall.
+			self.image = pygame.transform.flip(self.image, 1, 0)			      # byt hall.
 		if self.dy > 10 or self.dy < -10: # Om blocket ar utanfor vandpunkterna,
 			self.ddy = -self.ddy	
 		#if self.rect.top > 600:			    # Om blocket kommer nedanfor skarmen,
@@ -219,7 +219,7 @@ class Flamenemy(GameObject):
 		#	print scoore
 		self.rect.topleft = self.x + scrollx, self.y + scrolly # Flytta blockets sprite i forhallande till scrollen
 	def reset(self):
-		self.dx,self.dy,self.ddx,self.ddy = random.randint(-10,10),random.randint(-5,5), 1,-1 #random.randint(-1,1),random.randint(-1,1)
+		self.dx, self.dy, self.ddx, self.ddy = random.randint(-10, 10), random.randint(-5, 5), 1, -1 #random.randint(-1,1),random.randint(-1,1)
 	def die(self):
 		global scoore
 		scoore = scoore + 1
@@ -233,11 +233,11 @@ class Flameboy(GameObject):
 	onGround = False
 	range = 400
 	life = 20
-	limit = random.randint(4,7)
+	limit = random.randint(4, 7)
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image, self.rect = load_image(self.filename,-1) 
-		self.dx,self.ddx,self.dy,self.ddy = 1,-1,1,0
+		self.image, self.rect = load_image(self.filename, -1) 
+		self.dx, self.ddx, self.dy, self.ddy = 1, -1, 1, 0
 	def update(self):
 		global scrollx, scrolly
 		self.x = self.x + self.dx
@@ -246,13 +246,13 @@ class Flameboy(GameObject):
 		if not self.onGround:
 			self.dy = self.dy + 1
 		if self.dx > self.limit or self.dx < -self.limit:
-			self.ddx=-self.ddx
-			self.limit = random.randint(4,7)
+			self.ddx = -self.ddx
+			self.limit = random.randint(4, 7)
 			if self.onGround:
-				self.dy = -random.randint(5,15)
+				self.dy = -random.randint(5, 15)
 				if self.x + scrollx < thor.x + self.range and self.x + scrollx > thor.x - self.range and self.y + scrolly < thor.y + self.range and self.y + scrolly > thor.y - self.range:
 					enemy = Flamenemy()
-					enemy.setposition(self.x - 100,self.y)
+					enemy.setposition(self.x - 100, self.y)
 					map.addEnemy(enemy)
 					loadvisible()
 		if self.dy > 100:
@@ -261,13 +261,13 @@ class Flameboy(GameObject):
 			loadvisible()
 		if self.rect.collidelist(map.blocks) != -1:
 			if self.dy > 0:
-				self.dy,self.ddy = 0,0
+				self.dy, self.ddy = 0, 0
 				self.onGround = True
 		else:
 			self.onGround = False
 		self.rect.topleft = self.x + scrollx, self.y + scrolly
 	def reset(self):
-		self.dx,self.dy,self.ddx,self.ddy = 1,-1,1,0
+		self.dx, self.dy, self.ddx, self.ddy = 1, -1, 1, 0
 		self.onGround = False
 	def die(self):
 		global scoore
@@ -291,14 +291,14 @@ class Map():
 	initdoors = []
 	def addBlock(self, block):
 		self.blocks.append(block)
-		self.initblocks.append([block.x,block.y,block.leftlimit,block.rightlimit,block.dx])
+		self.initblocks.append([block.x, block.y, block.leftlimit, block.rightlimit, block.dx])
 	def addEnemy(self, enemy):
 		self.enemies.append(enemy)
-		self.initenemies.append([enemy.x,enemy.y,enemy.kind])
-	def addDoor(self,door):
+		self.initenemies.append([enemy.x, enemy.y, enemy.kind])
+	def addDoor(self, door):
 		self.doors.append(door)
-		self.initdoors.append([door.x,door.y,door.mapname])
-	def addShot(self,shot):
+		self.initdoors.append([door.x, door.y, door.mapname])
+	def addShot(self, shot):
 		self.shots.append(shot)
 	def update(self):
 		for block in self.blocks:
@@ -314,64 +314,64 @@ class Map():
 			text = font.render(str(scoore), 1, (255, 5, 5))
 			textpos = text.get_rect()
 			textpos.centerx = background.get_rect().centerx
-			background.blit(scooresurface,textpos)
+			background.blit(scooresurface, textpos)
 			background.blit(text, textpos)
 	def reset(self):
-		for index,block in enumerate(self.blocks):
-			block.setposition(self.initblocks[index][0],self.initblocks[index][1])
-			block.setlimits(self.initblocks[index][2],self.initblocks[index][3])
+		for index, block in enumerate(self.blocks):
+			block.setposition(self.initblocks[index][0], self.initblocks[index][1])
+			block.setlimits(self.initblocks[index][2], self.initblocks[index][3])
 			block.setdx(self.initblocks[index][4])
-		for index,enemy in enumerate(self.enemies):
-			enemy.setposition(self.initenemies[index][0],self.initenemies[index][1])
+		for index, enemy in enumerate(self.enemies):
+			enemy.setposition(self.initenemies[index][0], self.initenemies[index][1])
 			enemy.reset()
-		for index,door in enumerate(self.doors):	
-			door.setposition(int(self.initdoors[index][0]),int(self.initdoors[index][1]))
+		for index, door in enumerate(self.doors):	
+			door.setposition(int(self.initdoors[index][0]), int(self.initdoors[index][1]))
 			#door.mapname = initdoors[index][2]
 		self.shots = []
-	def savemap(self,filename):
-		f = open(filename,'w')
-		for index,block in enumerate(self.blocks):
-			f.write(string.join(["block",str(self.initblocks[index][0]),str(self.initblocks[index][1]),str(self.initblocks[index][2]),str(self.initblocks[index][3]),str(self.initblocks[index][4]),block.filename], ':'))
+	def savemap(self, filename):
+		f = open(filename, 'w')
+		for index, block in enumerate(self.blocks):
+			f.write(string.join(["block", str(self.initblocks[index][0]), str(self.initblocks[index][1]), str(self.initblocks[index][2]), str(self.initblocks[index][3]), str(self.initblocks[index][4]), block.filename], ':'))
 			f.write('\n')
 		for index in enumerate(self.enemies):
-			f.write(string.join(["flamenemy",str(self.initenemies[index][0]),str(self.initenemies[index][1]),str(self.initenemies[index][2])], ':'))
+			f.write(string.join(["flamenemy", str(self.initenemies[index][0]), str(self.initenemies[index][1]), str(self.initenemies[index][2])], ':'))
 			f.write('\n')
 		for index in enumerate(self.doors):
-			f.write(string.join(["door",str(self.initdoors[index][0]),str(self.initdoors[index][1]),self.initdoors[index][2]], ':'))
+			f.write(string.join(["door", str(self.initdoors[index][0]), str(self.initdoors[index][1]), self.initdoors[index][2]], ':'))
 			f.write('\n')
-	def loadmap(self,filename):
+	def loadmap(self, filename):
 		self.blocks = []
 		self.enemies = []
 		self.doors = []
 		self.initblocks = []
 		self.initenemies = []
 		self.initdoors = []
-		f = open(os.path.join('data',filename),'r')
+		f = open(os.path.join('data', filename), 'r')
 		for line in f:
-			entity  = string.split(line,':')
+			entity = string.split(line, ':')
 			if entity[0] == 'block':
 				block = Block()
-				block.setposition(int(entity[1]),int(entity[2]))
-				block.setlimits(int(entity[3]),int(entity[4]))
+				block.setposition(int(entity[1]), int(entity[2]))
+				block.setlimits(int(entity[3]), int(entity[4]))
 				block.setdx(int(entity[5]))
 				if string.strip(entity[6]) == 'blockgrass.bmp':
-					block.setimage(string.strip(entity[6]),-1)
+					block.setimage(string.strip(entity[6]), -1)
 				else:
-					block.setimage(string.strip(entity[6]),None)
+					block.setimage(string.strip(entity[6]), None)
 				self.addBlock(block)
 			elif entity[0] == 'flamenemy':
 				if len(entity) > 3:
 					if int(entity[3]) == 0:
 						enemy = Flamenemy()
 					elif int(entity[3]) == 1:
-						enemy  = Flameboy()
+						enemy = Flameboy()
 				else:
 					enemy = Flamenemy()
-				enemy.setposition(int(entity[1]),int(entity[2]))
+				enemy.setposition(int(entity[1]), int(entity[2]))
 				self.addEnemy(enemy)
 			elif entity[0] == 'door':
 				door = Door()
-				door.setposition(int(entity[1]),int(entity[2]))
+				door.setposition(int(entity[1]), int(entity[2]))
 				door.mapname = string.strip(entity[3])
 				self.addDoor(door)
 
@@ -379,39 +379,39 @@ class Map():
 
 class LevelEditor(GameObject):
 	entity = 0
-	images = ['blockgrass.bmp','block.bmp','flamenemy.bmp','door.bmp','flameboy.bmp']
+	images = ['blockgrass.bmp', 'block.bmp', 'flamenemy.bmp', 'door.bmp', 'flameboy.bmp']
 	filename = images[0]
 	def createGO(self):
 		if self.entity == 0:
 			block = Block()
-			block.setposition(self.x - scrollx,self.y - scrolly)
+			block.setposition(self.x - scrollx, self.y - scrolly)
 			map.addBlock(block)	
 		elif self.entity == 1:
 			block = Block()
-			block.setposition(self.x - scrollx,self.y - scrolly)
-			block.setimage(self.images[self.entity],None)
+			block.setposition(self.x - scrollx, self.y - scrolly)
+			block.setimage(self.images[self.entity], None)
 			map.addBlock(block)
 		elif self.entity == 2:
 			enemy = Flamenemy()
-			enemy.setposition(self.x - scrollx,self.y - scrolly)
+			enemy.setposition(self.x - scrollx, self.y - scrolly)
 			map.addEnemy(enemy)
 		elif self.entity == 3:
 			door = Door()
-			door.setposition(self.x - scrollx,self.y - scrolly)
+			door.setposition(self.x - scrollx, self.y - scrolly)
 			map.addDoor(door)
 		elif self.entity == 4:
 			flameboy = Flameboy()
-			flameboy.setposition(self.x - scrollx,self.y - scrolly)
+			flameboy.setposition(self.x - scrollx, self.y - scrolly)
 			map.addEnemy(flameboy)
 		loadvisible()
 	def changeGO(self):
-		self.entity = (self.entity + 1)%5
+		self.entity = (self.entity + 1) % 5
 		if self.entity == 0 or self.entity == 2 or self.entity == 3 or self.entity == 4: # For bilderna som vill ha en transparentcolor
-			self.setimage(self.images[self.entity],-1)
+			self.setimage(self.images[self.entity], -1)
 		else: 							     # For bilderna som inte vill
-			self.setimage(self.images[self.entity],None)
+			self.setimage(self.images[self.entity], None)
 	def update(self):
-		self.rect.topleft = self.x,self.y
+		self.rect.topleft = self.x, self.y
 
 # -- Door class -- # 
 
@@ -422,7 +422,7 @@ class Door(GameObject):
 	def update(self):
 		self.rect.topleft = self.x + scrollx, self.y + scrolly
 	def open(self):
-		global map,mapname
+		global map, mapname
 		map = Map()
 		map.loadmap(self.mapname)
 		mapname = self.mapname
@@ -432,33 +432,33 @@ class Door(GameObject):
 # -- Shot classen .. d e ett skott -- #
 
 class Shot(GameObject):
-	filenames = ['shot.bmp','oldshot.bmp']
+	filenames = ['shot.bmp', 'oldshot.bmp']
 	images = []
 	imagenr = 0
 	range = 400
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 		for filename in enumerate(self.filenames):
-			image, self.rect = load_image(filename,-1)
+			image, self.rect = load_image(filename, -1)
 			self.images.append(image)
 		self.image = self.images[0]
-		self.x,self.y = thor.x - scrollx,thor.y + 30 - scrolly
-		self.dy,self.ddy = random.randint(-6,6),random.randint(-1,1)
+		self.x, self.y = thor.x - scrollx, thor.y + 30 - scrolly
+		self.dy, self.ddy = random.randint(-6, 6), random.randint(-1, 1)
 		if thor.turnedRight:
 			self.dx = 15
-			self.x  = self.x + 40
+			self.x = self.x + 40
 		else:
 			self.dx = -15
 	def update(self):
 		self.x = self.x + self.dx
 		self.y = self.y + self.dy
 		self.dy = self.dy + self.ddy
-		self.imagenr = (self.imagenr + 1)%len(self.filenames)
+		self.imagenr = (self.imagenr + 1) % len(self.filenames)
 		self.image = self.images[self.imagenr]	
 		if self.dy > self.limit or self.dy < -self.limit:
 			
-			self.ddy=-self.ddy
-		self.rect.topleft = self.x + scrollx,self.y + scrolly
+			self.ddy = -self.ddy
+		self.rect.topleft = self.x + scrollx, self.y + scrolly
 		if self.x + scrollx > thor.x + self.range  or self.x + scrollx < thor.x - self.range:
 			map.shots.remove(self) # ta bort skottet fran listan i kartan o hopppas garbagecollectorn fixar biffen
 			loadvisible()
@@ -497,7 +497,7 @@ def input(events):
 			elif event.key == 27:		# Tryck escape
 				sys.exit()
 			elif event.key == 112:		# Tryck p for save current map
-				map.savemap(os.path.join('data',mapname))
+				map.savemap(os.path.join('data', mapname))
 			elif event.key == 32 or event.key == 102:		# Tryck space for SKJUT!
 				thor.shooting = True
 			else:
@@ -513,7 +513,7 @@ def input(events):
 			elif event.button == 3:		# Tryck hoger  mosknapp for vaxla objekt
 				leveleditor.changeGO()
 		elif event.type == MOUSEMOTION:
-				leveleditor.setposition(event.pos[0],event.pos[1]) # muspekaren flyttar leveleditorn
+				leveleditor.setposition(event.pos[0], event.pos[1]) # muspekaren flyttar leveleditorn
 		else:
 			print event
 
@@ -521,7 +521,7 @@ def input(events):
 
 while True:
 	clock.tick(60) 					# Delay
-	screen.blit(background,(0,0)) 			# Rita bakgrunden
+	screen.blit(background, (0, 0)) 			# Rita bakgrunden
 	if thor.boneRect.collidelist(map.blocks) != -1: # Testa goatboys ben mot alla block
 		if thor.dy > 0: 			# Om man nuddar ett block pa vagen ner,
 			thor.dy = 0 			# faller man inte langre nedat
@@ -540,3 +540,4 @@ while True:
 		input(pygame.event.get()) # Om det finns skicka event till input()
 	allsprites.draw(screen) # Rita alla sprites
 	pygame.display.flip()   # vand fram dubbelbufferten
+
