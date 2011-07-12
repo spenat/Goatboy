@@ -22,8 +22,8 @@ def proceed(gameState):
     if gs.thor.rect.collidelist(gs.map.enemies) != -1:
         gameLogic.reset(gs)
     elif gs.thor.rect.collidelist(gs.map.doors) != -1:
-        gs.map.doors[gs.thor.rect.collidelist(gs.map.doors)].open() # Oppna dorren
-        gameLogic.reset()
+        gs.map.doors[gs.thor.rect.collidelist(gs.map.doors)].open(gs) # Oppna dorren
+        gameLogic.reset(gs)
     gs.thor.update(gs)
     gs.leveleditor.update()
     gs.map.update(gs)
