@@ -42,16 +42,34 @@ class Goatboy(GameObject):
     def __init__(self, gameState):            # Initiera goatboy
         pygame.sprite.Sprite.__init__(self)             # Ladda en sprite
         self.image, self.rect = gameLogic.load_image('goatboy.bmp', -1)     # Ladda bilden pa goatboy
-        #gameState.screen = pygame.display.get_surface()            # Lagg skarmytan i screen
 
     def update(self, gameState):            #  update() updates goatboy every loop
         gs = gameState
+        
+        # Testa goatboys ben mot alla block
+        if gs.thor.boneRect.collidelist(gs.map.blocks) != -1:
+            if gs.thor.dy > 0:             # Om man nuddar ett block pa vagen ner,
+                gs.thor.dy = 0             # faller man inte langre nedat
+                gs.thor.onGround = True    # och har fotterna pa fast mark.
+        else:
+            gs.thor.onGround = False       # nuddar man inget block, star man inte pa marken
+    
+        # Om ens sprite krockar med en elakings, dor man
+        if gs.thor.rect.collidelist(gs.map.enemies) != -1:
+            gs.thor.die(gs)
+        
+        # Om man inte krockat med en fiende, men med en dorr, sa beamas man till nasta level
+        elif gs.thor.rect.collidelist(gs.map.doors) != -1:
+            gs.map.doors[gs.thor.rect.collidelist(gs.map.doors)].open(gs) # Oppna dorren
+        
         self.x = self.x + self.dx    # Flytta goatboy i hans horisontella hastighet
         if self.dx < self.maxspeed and self.dx > -self.maxspeed: # Om goatboys maxhastiget inte ar mott,
             self.dx = self.dx + self.ddx             # oka hans hastighet med hans acceleration
+            
         self.y = self.y + self.dy    # Flytta goatboy i hans vertikala hastighet
         if self.dy > 100:        # Om goatboy faller fortare an 100
             self.die(gs)           # sa dor han!
+            
         if self.shooting:
             if random.randint(1, 2) == 2:
                 shot = Shot(gs)
@@ -63,6 +81,7 @@ class Goatboy(GameObject):
                     shot.ddy = 1
                 gs.map.addShot(shot)
             gameLogic.loadvisible(gs)
+            
         # -- This is the frame of goatboys scroll :
         if self.y > self.bottomscroll:
             gs.scrolly = gs.scrolly + (self.bottomscroll - self.y)
@@ -76,9 +95,15 @@ class Goatboy(GameObject):
         elif self.x < self.leftscroll:
             gs.scrollx = gs.scrollx - (self.x - self.leftscroll)
             self.x = self.leftscroll
+            
         # If goatboy doesn't stand on the ground, he will fall down
         if not self.onGround:
             self.dy = self.dy + 1
+        
+        #If goatboy is on a moving block, he should be moving along with it
+        if self.onGround:
+            pass    
+        
         self.rect.topleft = self.x, self.y # Satt goatboys sprite till hans nya koordinater
         self.boneRect = pygame.Rect(self.x + 30, self.y + 74, 22, 1)    # Flytta fotterna efter de nya koordinaterna
 
