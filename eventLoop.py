@@ -1,6 +1,4 @@
 '''
-Created on 12 jul 2011
-
 @author: arvid
 @author: mikael
 '''
@@ -25,7 +23,7 @@ def proceed(gameState):
         gs.map.doors[gs.thor.rect.collidelist(gs.map.doors)].open(gs) # Oppna dorren
         gameLogic.reset(gs)
     gs.thor.update(gs)
-    gs.leveleditor.update()
+    #gs.leveleditor.update()
     gs.map.update(gs)
     if pygame.event.peek(): # Titta om det finns en event i event-kon
         handleInput(pygame.event.get(), gs) # Om det finns skicka event till input()

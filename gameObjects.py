@@ -42,7 +42,7 @@ class Goatboy(GameObject):
     def __init__(self, gameState):            # Initiera goatboy
         pygame.sprite.Sprite.__init__(self)             # Ladda en sprite
         self.image, self.rect = gameLogic.load_image('goatboy.bmp', -1)     # Ladda bilden pa goatboy
-        gameState.screen = pygame.display.get_surface()            # Lagg skarmytan i screen
+        #gameState.screen = pygame.display.get_surface()            # Lagg skarmytan i screen
 
     def update(self, gameState):            #  update() updates goatboy every loop
         gs = gameState
@@ -326,6 +326,8 @@ class LevelEditor(GameObject):
     images = ['blockgrass.bmp', 'block.bmp', 'flamenemy.bmp', 'door.bmp', 'flameboy.bmp']
     filename = images[0]
     def createGO(self, gameState):
+        pass
+        '''
         gs = gameState
         
         if self.entity == 0:
@@ -351,13 +353,16 @@ class LevelEditor(GameObject):
             gs.map.addEnemy(flameboy)
         
         gameLogic.loadvisible()
-
+        '''
     def changeGO(self):
+        pass
+        '''
         self.entity = (self.entity + 1) % 5
         if self.entity == 0 or self.entity == 2 or self.entity == 3 or self.entity == 4: # For bilderna som vill ha en transparentcolor
             self.setimage(self.images[self.entity], -1)
         else:                                  # For bilderna som inte vill
             self.setimage(self.images[self.entity], None)
-
+        '''
     def update(self):
-        self.rect.topleft = self.x, self.y
+        pass
+        #self.rect.topleft = self.x, self.y
