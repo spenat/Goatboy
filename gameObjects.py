@@ -51,7 +51,7 @@ class Goatboy(GameObject):
             self.dx = self.dx + self.ddx             # oka hans hastighet med hans acceleration
         self.y = self.y + self.dy    # Flytta goatboy i hans vertikala hastighet
         if self.dy > 100:        # Om goatboy faller fortare an 100
-            gameLogic.reset(gs)            # Reset game
+            self.die(gs)           # sa dor han!
         if self.shooting:
             if random.randint(1, 2) == 2:
                 shot = Shot(gs)
@@ -81,6 +81,9 @@ class Goatboy(GameObject):
             self.dy = self.dy + 1
         self.rect.topleft = self.x, self.y # Satt goatboys sprite till hans nya koordinater
         self.boneRect = pygame.Rect(self.x + 30, self.y + 74, 22, 1)    # Flytta fotterna efter de nya koordinaterna
+
+    def die(self, gameState):
+        gameLogic.reset(gameState)
 
     def move_right(self):
         self.ddx = 1 # Nar goatboy flyttar at hoger ar hans acceleration positiv
@@ -309,6 +312,7 @@ class Door(GameObject):
         self.rect.topleft = self.x + gameState.scrollx, self.y + gameState.scrolly
 
     def open(self, gameState):
+        gameState.scoreFromPreviousLevel = gameState.scoore
         gameState.map = mapLogic.Map()
         gameState.map.loadmap(self.mapname)
         gameState.mapname = self.mapname

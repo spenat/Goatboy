@@ -3,28 +3,34 @@
 @author: mikael
 '''
 
-import gameLogic, pygame, sys, os
+import gameLogic, pygame, os
 from pygame.locals import KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT
 
 def proceed(gameState):
     gs = gameState
-    
-    gs.clock.tick(60)                     # Delay
+    gs.clock.tick(60)   # Delay
     gs.screen.blit(gs.background, (0, 0)) # Rita bakgrunden
-    if gs.thor.boneRect.collidelist(gs.map.blocks) != -1:                     # Testa goatboys ben mot alla block
+    
+    # Testa goatboys ben mot alla block
+    if gs.thor.boneRect.collidelist(gs.map.blocks) != -1:
         if gs.thor.dy > 0:             # Om man nuddar ett block pa vagen ner,
             gs.thor.dy = 0             # faller man inte langre nedat
             gs.thor.onGround = True    # och har fotterna pa fast mark.
     else:
-        gs.thor.onGround = False # nuddar man inget block, star man inte pa marken
+        gs.thor.onGround = False       # nuddar man inget block, star man inte pa marken
+
+    # Om ens sprite krockar med en elakings, dor man
     if gs.thor.rect.collidelist(gs.map.enemies) != -1:
-        gameLogic.reset(gs)
+        gs.thor.die(gs)
+    
+    # Om man inte krockat med en fiende, men med en dorr, sa beamas man till nasta level
     elif gs.thor.rect.collidelist(gs.map.doors) != -1:
         gs.map.doors[gs.thor.rect.collidelist(gs.map.doors)].open(gs) # Oppna dorren
-        gameLogic.reset(gs)
+    
     gs.thor.update(gs)
     #gs.leveleditor.update()
     gs.map.update(gs)
+    
     if pygame.event.peek(): # Titta om det finns en event i event-kon
         if not handleInput(pygame.event.get(), gs):  # Om det finns skicka event till input()
             return False

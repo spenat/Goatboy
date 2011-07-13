@@ -37,6 +37,18 @@ def initializeGame(gameState):
     gs.leveleditor = LevelEditor()
     
     gameLogic.loadvisible(gs)
+    
+    gs.frameCounter = 0                    # Set up FPS counter
+    gs.startingTime = time.time()          #
+
+
+def endGame(gameState):
+    playingTime = time.time() - gameState.startingTime  
+        
+    print "You played the game for %i seconds, during which %i frames were rendered. That gives an average FPS of %i \n" % (playingTime, gameState.frameCounter, gameState.frameCounter/playingTime)
+    
+    gameLogic.highscore(gameState.scoore)
+
 
 
 ###### Module body #############
@@ -44,14 +56,10 @@ def initializeGame(gameState):
 gameState = gameState.GameState()   # Create a state object
 initializeGame(gameState)           # Initialize a new game in the state object
 
-frameCounter = 0                    # Set up FPS counter
-startingTime = time.time()          #
+while eventLoop.proceed(gameState):                     # The condition of this while-loop is where
+    gameState.frameCounter = gameState.frameCounter + 1 # the games is actually taking place
 
-while eventLoop.proceed(gameState): # The condition of this while-loop is where
-    frameCounter = frameCounter + 1 # the games is actually taking place
-
-playingTime = time.time() - startingTime  
-    
-print "You played the game for %i seconds, during which %i frames were rendered. That gives an average FPS of %i " % (playingTime, frameCounter, frameCounter/playingTime)
+endGame(gameState)
 
 ###### End of module body ###########
+
