@@ -45,6 +45,7 @@ def highscore(score):
     the	list on score and prints it to the terminal.
     '''
     if score < 1: # Score zero doesn't count
+        print "You suck. Gain at least one point in order to reveal the high score list."
         return
 
     f = open(os.path.join('data', 'highscore.csv'), 'a')
