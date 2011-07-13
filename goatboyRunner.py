@@ -5,7 +5,7 @@ Created on 12 jul 2011
 @author: Arvid
 '''
 
-import gameLogic, eventLoop, gameState, mapLogic, pygame, os
+import gameLogic, eventLoop, gameState, mapLogic, pygame, os, time
 
 def initializeGame(gameState):
     gs = gameState
@@ -39,8 +39,19 @@ def initializeGame(gameState):
     gameLogic.loadvisible(gs)
 
 
-gameState = gameState.GameState()
-initializeGame(gameState)
+###### Module body #############
 
-while True:
-    eventLoop.proceed(gameState)
+gameState = gameState.GameState()   # Create a state object
+initializeGame(gameState)           # Initialize a new game in the state object
+
+frameCounter = 0                    # Set up FPS counter
+startingTime = time.time()          #
+
+while eventLoop.proceed(gameState): # The condition of this while-loop is where
+    frameCounter = frameCounter + 1 # the games is actually taking place
+
+playingTime = time.time() - startingTime  
+    
+print "You played the game for %i seconds, during which %i frames were rendered. That gives an average FPS of %i " % (playingTime, frameCounter, frameCounter/playingTime)
+
+###### End of module body ###########

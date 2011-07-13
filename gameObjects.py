@@ -197,7 +197,7 @@ class Flameboy(GameObject):
         if self.dy > 100:
             print "flameboy fell down"
             gs.map.enemies.remove(self)
-            gameLogic.loadvisible()
+            gameLogic.loadvisible(gs)
         if self.rect.collidelist(gs.map.blocks) != -1:
             if self.dy > 0:
                 self.dy, self.ddy = 0, 0

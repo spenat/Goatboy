@@ -26,9 +26,12 @@ def proceed(gameState):
     #gs.leveleditor.update()
     gs.map.update(gs)
     if pygame.event.peek(): # Titta om det finns en event i event-kon
-        handleInput(pygame.event.get(), gs) # Om det finns skicka event till input()
+        if not handleInput(pygame.event.get(), gs):  # Om det finns skicka event till input()
+            return False
     gs.allsprites.draw(gs.screen) # Rita alla sprites
     pygame.display.flip()   # vand fram dubbelbufferten
+    
+    return True
     
     
 def handleInput(events, gameState):
@@ -43,7 +46,7 @@ def handleInput(events, gameState):
     
     for event in events:
         if event.type == QUIT:
-            sys.exit()
+            return False
         elif event.type == KEYDOWN:
             if event.key == 275 or event.key == 100:         # Tryck hoger lr d
                 thor.move_right()
@@ -56,7 +59,7 @@ def handleInput(events, gameState):
             elif event.key == 120:
                 thor.changeweapon()
             elif event.key == 27:        # Tryck escape
-                sys.exit()
+                return False
             elif event.key == 112:        # Tryck p for save current map
                 map.savemap(os.path.join('data', map.name))
             elif event.key == 32 or event.key == 102:        # Tryck space for SKJUT!
@@ -77,3 +80,5 @@ def handleInput(events, gameState):
                 leveleditor.setposition(event.pos[0], event.pos[1]) # muspekaren flyttar leveleditorn
         else:
             print event
+
+    return True
