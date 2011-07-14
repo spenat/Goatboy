@@ -330,9 +330,19 @@ class Door(GameObject):
     '''
     Door class
     '''
-    numofmaps = 18
     filename = 'door.bmp'
-    mapname = 'map' + str(numofmaps) + '.map'
+    targetMap = None
+
+    def __init__(self, targetMap=None):
+        GameObject.__init__(self)
+        
+        if self.targetMap == None:
+            import os
+            numOfLastMap = sorted( int( file.lstrip('map').rstrip('.map') ) for file in os.listdir('data') if file.endswith('.map') )[-1]
+            self.targetMap = 'map' + str(numOfLastMap) + '.map'
+            print self.targetMap
+        else:
+            self.targetMap = targetMap
 
     def update(self, gameState):
         self.rect.topleft = self.x + gameState.scrollx, self.y + gameState.scrolly
@@ -340,54 +350,10 @@ class Door(GameObject):
     def open(self, gameState):
         gameState.scoreFromPreviousLevel = gameState.scoore
         gameState.map = mapLogic.Map()
-        gameState.map.loadmap(self.mapname)
-        gameState.mapname = self.mapname
+        gameState.map.loadmap(self.targetMap)
+        gameState.mapname = self.targetMap
         gameLogic.reset(gameState)
         gameLogic.loadvisible(gameState)
 
 
 
-
-class LevelEditor(GameObject):
-    '''
-    Leveleditor
-    '''
-    entity = 0
-    images = ['blockgrass.bmp', 'block.bmp', 'flamenemy.bmp', 'door.bmp', 'flameboy.bmp']
-    filename = images[0]
-    def createGO(self, gameState):
-        gs = gameState
-        
-        if self.entity == 0:
-            block = Block()
-            block.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
-            gs.map.addBlock(block)    
-        elif self.entity == 1:
-            block = Block()
-            block.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
-            block.setimage(self.images[self.entity], None)
-            gs.map.addBlock(block)
-        elif self.entity == 2:
-            enemy = Flamenemy()
-            enemy.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
-            gs.map.addEnemy(enemy)
-        elif self.entity == 3:
-            door = Door()
-            door.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
-            gs.map.addDoor(door)
-        elif self.entity == 4:
-            flameboy = Flameboy()
-            flameboy.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
-            gs.map.addEnemy(flameboy)
-        
-        gameLogic.loadvisible(gs)
-
-    def changeGO(self):
-        self.entity = (self.entity + 1) % 5
-        if self.entity == 0 or self.entity == 2 or self.entity == 3 or self.entity == 4: # For bilderna som vill ha en transparentcolor
-            self.setimage(self.images[self.entity], -1)
-        else:                                  # For bilderna som inte vill
-            self.setimage(self.images[self.entity], None)
-
-    def update(self):
-        self.rect.topleft = self.x, self.y

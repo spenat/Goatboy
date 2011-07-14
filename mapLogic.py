@@ -29,7 +29,7 @@ class Map():
 
     def addDoor(self, door):
         self.doors.append(door)
-        self.initdoors.append([door.x, door.y, door.mapname])
+        self.initdoors.append([door.x, door.y, door.targetMap])
 
     def addShot(self, shot):
         self.shots.append(shot)
@@ -111,5 +111,5 @@ class Map():
             elif entity[0] == 'door':
                 door = gameObjects.Door()
                 door.setposition(int(entity[1]), int(entity[2]))
-                door.mapname = string.strip(entity[3])
+                door.targetMap = string.strip(entity[3])
                 self.addDoor(door)

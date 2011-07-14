@@ -22,7 +22,6 @@ def initializeGame(gameState):
     gs.scrolly = 0
     gs.scoore = 0
     gs.scooresurface = pygame.Surface((50, 25))
-    gs.leveleditor = None
     
     pygame.display.set_caption('Goatboy: the hoorned avanger') #Fonstertitel
     pygame.display.flip()
@@ -33,7 +32,7 @@ def initializeGame(gameState):
 
     from gameObjects import Goatboy
     gs.thor = Goatboy(gs) # skapa ett goatboy-objekt =)
-    from gameObjects import LevelEditor
+    from levelEditor import LevelEditor
     gs.leveleditor = LevelEditor()
     
     gameLogic.loadvisible(gs)
