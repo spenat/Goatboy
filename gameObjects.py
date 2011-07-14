@@ -1,5 +1,6 @@
 '''
 @author: mikael
+@author: arvid
 '''
 
 import pygame, random, gameLogic, mapLogic
@@ -43,7 +44,7 @@ class Goatboy(GameObject):
         pygame.sprite.Sprite.__init__(self)             # Ladda en sprite
         self.image, self.rect = gameLogic.load_image('goatboy.bmp', -1)     # Ladda bilden pa goatboy
 
-    def update(self, gameState):            #  update() updates goatboy every loop
+    def update(self, gameState):            #  
         gs = gameState
         
         # Testa goatboys ben mot alla block
