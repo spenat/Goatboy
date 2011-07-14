@@ -49,16 +49,19 @@ def endGame(gameState):
     gameLogic.highscore(gameState.scoore)
 
 
+def main():
+    gs = gameState.GameState()   # Create a state object
+    initializeGame(gs)           # Initialize a new game in the state object
+    
+    while eventLoop.proceed(gs):                     # The condition of this while-loop is where
+        gs.frameCounter = gs.frameCounter + 1 # the games is actually taking place
+    
+    endGame(gs)
+
 
 ###### Module body #############
 
-gameState = gameState.GameState()   # Create a state object
-initializeGame(gameState)           # Initialize a new game in the state object
-
-while eventLoop.proceed(gameState):                     # The condition of this while-loop is where
-    gameState.frameCounter = gameState.frameCounter + 1 # the games is actually taking place
-
-endGame(gameState)
+if __name__ == '__main__': main()
 
 ###### End of module body ###########
 
