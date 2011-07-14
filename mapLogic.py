@@ -66,19 +66,17 @@ class Map():
         self.shots = []
 
     def savemap(self, filename):
-        pass
-        ''' something odd is going on in here
-                f = open(filename, 'w')
-                for index, block in enumerate(self.blocks):
-                    f.write(string.join(["block", str(self.initblocks[index][0]), str(self.initblocks[index][1]), str(self.initblocks[index][2]), str(self.initblocks[index][3]), str(self.initblocks[index][4]), block.filename], ':'))
-                    f.write('\n')
-                for index in self.enemies:
-                    f.write(string.join(["flamenemy", str(self.initenemies[index][0]), str(self.initenemies[index][1]), str(self.initenemies[index][2])], ':'))
-                    f.write('\n')
-                for index in enumerate(self.doors):
-                    f.write(string.join(["door", str(self.initdoors[index][0]), str(self.initdoors[index][1]), self.initdoors[index][2]], ':'))
-                    f.write('\n')
-        '''
+        f = open(filename, 'w')
+        for index, block in enumerate(self.blocks):
+            f.write(string.join(["block", str(self.initblocks[index][0]), str(self.initblocks[index][1]), str(self.initblocks[index][2]), str(self.initblocks[index][3]), str(self.initblocks[index][4]), block.filename], ':'))
+            f.write('\n')
+        for index, enemyName in enumerate(self.enemies):
+            f.write(string.join(["flamenemy", str(self.initenemies[index][0]), str(self.initenemies[index][1]), str(self.initenemies[index][2])], ':'))
+            f.write('\n')
+        for index in enumerate(self.doors):
+            f.write(string.join(["door", str(self.initdoors[index][0]), str(self.initdoors[index][1]), self.initdoors[index][2]], ':'))
+            f.write('\n')
+
     def loadmap(self, filename):
         self.name = filename
         self.blocks = []

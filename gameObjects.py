@@ -356,8 +356,6 @@ class LevelEditor(GameObject):
     images = ['blockgrass.bmp', 'block.bmp', 'flamenemy.bmp', 'door.bmp', 'flameboy.bmp']
     filename = images[0]
     def createGO(self, gameState):
-        pass
-        '''
         gs = gameState
         
         if self.entity == 0:
@@ -368,7 +366,7 @@ class LevelEditor(GameObject):
             block = Block()
             block.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
             block.setimage(self.images[self.entity], None)
-            map.addBlock(block)
+            gs.map.addBlock(block)
         elif self.entity == 2:
             enemy = Flamenemy()
             enemy.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
@@ -382,17 +380,14 @@ class LevelEditor(GameObject):
             flameboy.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
             gs.map.addEnemy(flameboy)
         
-        gameLogic.loadvisible()
-        '''
+        gameLogic.loadvisible(gs)
+
     def changeGO(self):
-        pass
-        '''
         self.entity = (self.entity + 1) % 5
         if self.entity == 0 or self.entity == 2 or self.entity == 3 or self.entity == 4: # For bilderna som vill ha en transparentcolor
             self.setimage(self.images[self.entity], -1)
         else:                                  # For bilderna som inte vill
             self.setimage(self.images[self.entity], None)
-        '''
+
     def update(self):
-        pass
-        #self.rect.topleft = self.x, self.y
+        self.rect.topleft = self.x, self.y

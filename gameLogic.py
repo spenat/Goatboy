@@ -8,7 +8,6 @@
 import os, pygame, string, getpass, time, operator
 from pygame.locals import RLEACCEL
 
-
 def loadvisible(gameState):
     gs = gameState
     gs.allsprites = pygame.sprite.RenderPlain(sum([gs.map.shots, gs.map.blocks, gs.map.enemies, gs.map.doors, [gs.leveleditor, gs.thor]], [])) # Alla sprites som ska ritas

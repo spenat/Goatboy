@@ -63,7 +63,7 @@ def handleInput(events, gameState):
                 thor.shooting = False
         elif event.type == MOUSEBUTTONDOWN:
             if event.button == 1:         # Tryck vanster musknapp for skapa valt objekt
-                leveleditor.createGO()
+                leveleditor.createGO(gs)
             elif event.button == 3:        # Tryck hoger  mosknapp for vaxla objekt
                 leveleditor.changeGO()
         elif event.type == MOUSEMOTION:
