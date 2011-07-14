@@ -58,13 +58,20 @@ def highscore(score):
         entry = string.split(line, ',')
         highscoreList.append( (entry[0], entry[1], entry[2] ) )
     f.close()
-    sortedHighscores = sorted(highscoreList, key=operator.itemgetter(0), reverse=True)
+    sortedHighscores = sorted(highscoreList, key=lambda score: int(score[0]), reverse=True)
     
     print " Rank | Score  |       Name        |     Time/date    "
     print "------------------------------------------------------"
-    rank = 1
-    for scoreLine in sortedHighscores:
+    
+    lowestOnList = 0
+    for rank, scoreLine in enumerate(sortedHighscores):
         print str(rank).rjust(5) + scoreLine[0].rjust(8) + scoreLine[1].rjust(20) + scoreLine[2].rjust(23)
+        if rank == 9:
+            lowestOnList = scoreLine[0]
+            break
+        
+    if score < lowestOnList:
+        print "\nSorry pal, a score of just %i points doesn't cut it anymore." % score
        
 def getHighestMapNumber():
     ''' Raden nedan gor foljande:
