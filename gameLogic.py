@@ -65,4 +65,13 @@ def highscore(score):
     rank = 1
     for scoreLine in sortedHighscores:
         print str(rank).rjust(5) + scoreLine[0].rjust(8) + scoreLine[1].rjust(20) + scoreLine[2].rjust(23)
-        
+       
+def getHighestMapNumber():
+    ''' Raden nedan gor foljande:
+    1. Plockar fram en lista pa alla filer med  i katalogen 'data' med andelsen '.map'
+    2. Plockar bort prefix och suffix runt kart-nummret i varje filnamn
+    3. Sorterar i storleksordning
+    4. Returnerar sista elementet i den sorterade listan
+    '''
+    return sorted( int( file.lstrip('map').rstrip('.map') ) for file in os.listdir('data') if file.endswith('.map') )[-1]
+    

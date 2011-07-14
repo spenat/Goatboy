@@ -5,6 +5,7 @@ Created on 12 jul 2011
 '''
 
 import pygame, gameObjects, string, os
+import gameLogic
 
 class Map():
     '''
@@ -70,12 +71,19 @@ class Map():
         for index, block in enumerate(self.blocks):
             f.write(string.join(["block", str(self.initblocks[index][0]), str(self.initblocks[index][1]), str(self.initblocks[index][2]), str(self.initblocks[index][3]), str(self.initblocks[index][4]), block.filename], ':'))
             f.write('\n')
-        for index, enemyName in enumerate(self.enemies):
+        for index in enumerate(self.enemies):
+            index = index[0]
             f.write(string.join(["flamenemy", str(self.initenemies[index][0]), str(self.initenemies[index][1]), str(self.initenemies[index][2])], ':'))
             f.write('\n')
         for index in enumerate(self.doors):
+            index = index[0]
             f.write(string.join(["door", str(self.initdoors[index][0]), str(self.initdoors[index][1]), self.initdoors[index][2]], ':'))
             f.write('\n')
+            
+    def savemapAs(self, gameState):
+        import guiTools
+        mapNumber = guiTools.ask(gameState.screen, "Save map as (number)", str( gameLogic.getHighestMapNumber()+1 ) )
+        self.savemap( os.path.join('data', "map" + str(mapNumber)  + ".map") )
 
     def loadmap(self, filename):
         self.name = filename

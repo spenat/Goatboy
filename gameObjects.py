@@ -337,16 +337,7 @@ class Door(GameObject):
         GameObject.__init__(self)
         
         if self.targetMap == None:
-            import os
-            ''' Raden nedan gor foljande:
-             1. Plockar fram en lista pa alla filer med  i katalogen 'data' med andelsen '.map'
-             2. Plockar bort prefix och suffix runt kart-nummret i varje filnamn
-             3. Sorterar i storleksordning
-             4. Returnerar sista elementet i den sorterade listan
-            '''
-            numOfLastMap = sorted( int( file.lstrip('map').rstrip('.map') ) for file in os.listdir('data') if file.endswith('.map') )[-1]
-            self.targetMap = 'map' + str(numOfLastMap) + '.map'
-            print self.targetMap
+            self.targetMap = 'map' + str( gameLogic.getHighestMapNumber() ) + '.map'
         else:
             self.targetMap = targetMap
 

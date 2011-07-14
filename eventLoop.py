@@ -46,12 +46,14 @@ def handleInput(events, gameState):
                 thor.move_down()
             elif event.key == 273 or event.key == 119:        # Tryck upp lr w
                 thor.move_up()
-            elif event.key == 120:
+            elif event.key == 120:      # Tryck x for att andra spridning pa skotten
                 thor.changeweapon()
             elif event.key == 27:        # Tryck escape
                 return False
             elif event.key == 112:        # Tryck p for save current map
                 map.savemap(os.path.join('data', map.name))
+            elif event.key == 111:      # Tryck o for save-as current map
+                map.savemapAs(gs)
             elif event.key == 32 or event.key == 102:        # Tryck space for SKJUT!
                 thor.shooting = True
             else:
