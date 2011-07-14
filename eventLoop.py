@@ -54,6 +54,8 @@ def handleInput(events, gameState):
                 map.savemap(os.path.join('data', map.name))
             elif event.key == 111:      # Tryck o for save-as current map
                 map.savemapAs(gs)
+            elif event.key == 110:      # Tryck n for att borja bygga pa en tom, ny karta.
+                map.newMapFromScratch(gs)
             elif event.key == 32 or event.key == 102:        # Tryck space for SKJUT!
                 thor.shooting = True
             else:

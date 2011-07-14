@@ -85,6 +85,16 @@ class Map():
         mapNumber = guiTools.ask(gameState.screen, "Save map as (number)", str( gameLogic.getHighestMapNumber()+1 ) )
         self.savemap( os.path.join('data', "map" + str(mapNumber)  + ".map") )
 
+    def newMapFromScratch(self, gameState):
+        startingBlock = gameObjects.Block()
+        startingBlock.setposition(300, 400)
+        newMap = Map()
+        newMap.addBlock(startingBlock)
+        newMapFileName = "map" + str( gameLogic.getHighestMapNumber()+1 )  + ".map"
+        newMap.savemap( os.path.join('data', newMapFileName) )
+        self.loadmap(newMapFileName)
+        gameLogic.reset(gameState)
+
     def loadmap(self, filename):
         self.name = filename
         self.blocks = []

@@ -335,7 +335,7 @@ class Door(GameObject):
 
     def __init__(self, targetMap=None):
         GameObject.__init__(self)
-        
+
         if self.targetMap == None:
             self.targetMap = 'map' + str( gameLogic.getHighestMapNumber() ) + '.map'
         else:
@@ -350,7 +350,8 @@ class Door(GameObject):
         gameState.map.loadmap(self.targetMap)
         gameState.mapname = self.targetMap
         gameLogic.reset(gameState)
-        gameLogic.loadvisible(gameState)
 
+    def setTargetDoor(self, targetNum):
+        self.targetMap = 'map' + str( targetNum ) + '.map'
 
 

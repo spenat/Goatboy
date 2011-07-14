@@ -21,11 +21,11 @@ def display_box(screen, message):
     pygame.draw.rect(screen, (0,0,0),
                    ((screen.get_width() / 2) - 100,
                     (screen.get_height() / 2) - 10,
-                    200,20), 0)
+                    300,20), 0)
     pygame.draw.rect(screen, (255,255,255),
                    ((screen.get_width() / 2) - 102,
                     (screen.get_height() / 2) - 12,
-                    204,24), 1)
+                    304,24), 1)
     if len(message) != 0:
         screen.blit(fontobject.render(message, 1, (255,255,255)),
                 ((screen.get_width() / 2) - 100, (screen.get_height() / 2) - 10))

@@ -31,6 +31,8 @@ class LevelEditor(GameObject):
             gs.map.addEnemy(enemy)
         elif self.entity == 3:
             door = Door()
+            import guiTools
+            door.setTargetDoor( guiTools.ask(gs.screen, "Which map number should the door lead to?") )
             door.setposition(self.x - gs.scrollx, self.y - gs.scrolly)
             gs.map.addDoor(door)
         elif self.entity == 4:
