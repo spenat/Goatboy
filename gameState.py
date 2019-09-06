@@ -6,8 +6,14 @@ Created on 12 jul 2011
 
 class GameState(object):
     '''
-    This class holds the state of the game. I find it easier to work with than normal, 
-    global, Python variables.
+    This class holds the state of the game.
+
+    (Ex for future development:)
+    Sandbox <gamemode> <userpriv?> state
+    Menu <gamemode> <userpriv?> state
+    Inventory <gamemode> state
+    gamemode is editing or mortal
+    userpriv is player or root
     '''
     allsprites = None
     background = None
@@ -26,5 +32,4 @@ class GameState(object):
     scooresurface = None
     startingTime = 0
     thor = None
-    window = None    
-
+    window = None

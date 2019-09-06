@@ -4,8 +4,10 @@ Based on inputbox.py by Timothy Downs, changed a bit by Arvid for use in Goatboy
 @author: Timothy Downs
 @author: arvid
 '''
+
 import pygame.font, pygame.event, pygame.draw, string
 from pygame.locals import KEYDOWN, K_BACKSPACE, K_RETURN
+
 
 def get_key():
     while 1:

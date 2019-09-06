@@ -3,12 +3,12 @@
 
 	Goatboy
 
-run: 
+run:
 python goatboy.py
 
 needed to run:
 python 2.5
-pygame 
+pygame
 
 todo:
 interpolating collision detection
@@ -17,7 +17,3 @@ level editor :
 	* save as - functionallity
 More GameObject! =)
 grapplehook
-
-
-
-
