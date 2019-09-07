@@ -10,17 +10,25 @@ from pygame.locals import RLEACCEL
 
 def loadvisible(gameState):
     gs = gameState
-    gs.allsprites = pygame.sprite.RenderPlain(sum([gs.map.shots, gs.map.blocks, gs.map.enemies, gs.map.doors, gs.map.upgrades, [gs.leveleditor, gs.thor]], [])) # Alla sprites som ska ritas
+    if gs.thor:
+        controllables = [gs.thor]
+    elif gs.leveleditor:
+        controllables = [gs.leveleditor]
+    if gs.map:
+        gs.allsprites = pygame.sprite.RenderPlain(sum([gs.map.shots, gs.map.blocks, gs.map.enemies, gs.map.doors, gs.map.upgrades, controllables], [])) # Alla sprites som ska ritas
 
 def reset(gameState):
-    gs = gameState
     '''
     Reset everything but the current level and current weapon
     '''
-    gs.scrollx, gs.scrolly, gs.thor.dx, gs.thor.ddx, gs.thor.dy, = 0, 0, 0, 0, 0
+    gs = gameState
+    gs.scrollx, gs.scrolly = 0, 0
+    if gs.thor:
+        gs.thor.dx, gs.thor.ddx, gs.thor.dy, = 0, 0, 0
     gameState.scoore = gameState.scoreFromPreviousLevel
     gs.map.reset()
-    gs.thor.setposition(300, 150)
+    if gs.thor:
+        gs.thor.setposition(300, 150)
     gs.background.blit(gs.back_surface, (0, 0))
     loadvisible(gs)
 
@@ -46,9 +54,10 @@ def highscore(score):
     Appends new score to high score file, reads in the highscore file to a list, sorts
     the	list on score and prints it to the terminal.
     '''
+    returnString = ""
     if score < 1: # Score zero doesn't count
-        print "You suck. Gain at least one point in order to reveal the high score list."
-        return
+        returnString += "You suck. Gain at least one point in order to reveal the high score list."
+        return returnString
 
     f = open(os.path.join('data', 'highscore.csv'), 'a')
     scoreLine = ("%s, %s, %s \n") % ( score, str(getpass.getuser()), str(time.strftime('%x %X')) )
@@ -63,18 +72,20 @@ def highscore(score):
     f.close()
     sortedHighscores = sorted(highscoreList, key=lambda score: int(score[0]), reverse=True)
 
-    print " Rank | Score  |       Name        |     Time/date    "
-    print "------------------------------------------------------"
+    returnString += " Rank | Score  |       Name        |     Time/date    \n"
+    returnString += "------------------------------------------------------\n"
 
     lowestOnList = 0
     for rank, scoreLine in enumerate(sortedHighscores):
-        print str(rank).rjust(5) + scoreLine[0].rjust(8) + scoreLine[1].rjust(20) + scoreLine[2].rjust(23)
+        returnString += str(rank).rjust(5) + scoreLine[0].rjust(8) + scoreLine[1].rjust(20) + scoreLine[2].rjust(23)
+        returnString += "\n"
         if rank == 9:
             lowestOnList = scoreLine[0]
             break
 
     if score < lowestOnList:
-        print "\nSorry pal, a score of just %i points doesn't cut it anymore." % score
+        returnString += "\nSorry pal, a score of just %i points doesn't cut it anymore.\n" % score
+    return returnString
 
 def getHighestMapNumber():
     ''' Raden nedan gor foljande:

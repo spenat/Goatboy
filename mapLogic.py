@@ -42,16 +42,28 @@ class Map():
     def update(self, gameState):
         gs = gameState
 
-        for block in self.blocks:
-            block.update(gs)
-        for enemy in self.enemies:
-            enemy.update(gs)
-        for door in self.doors:
-            door.update(gs)
-        for shot in self.shots:
-            shot.update(gs)
-        for upgrade in self.upgrades:
-            upgrade.update(gs)
+        def static_update(gameObject):
+            gameObject.rect.topleft = gameObject.x + gs.scrollx, gameObject.y + gs.scrolly
+
+        if gs.thor:
+            for block in self.blocks:
+                block.update(gs)
+            for enemy in self.enemies:
+                enemy.update(gs)
+            for door in self.doors:
+                door.update(gs)
+            for shot in self.shots:
+                shot.update(gs)
+            for upgrade in self.upgrades:
+                upgrade.update(gs)
+        else:
+            for block in self.blocks:
+                static_update(block)
+            for enemy in self.enemies:
+                static_update(enemy)
+            for door in self.doors:
+                static_update(door)
+
         if pygame.font:
             font = pygame.font.Font(None, 36)
             text = font.render(str(gs.scoore), 1, (255, 5, 5))

@@ -6,16 +6,24 @@
 import pygame, random, gameLogic, mapLogic, os
 
 class GameObject(pygame.sprite.Sprite):
+
     x, y = 0, 0
     filename = 'door.bmp'
+
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect = gameLogic.load_image(self.filename, -1)
+
     def setposition(self, x, y): # Satt blockets startposition
         self.x, self.y = x, y
+
     def setimage(self, imagename, colorkey):
         self.filename = imagename
         self.image, self.rect = gameLogic.load_image(imagename, colorkey)
+
+    def log(self, log_string):
+        #print log_string
+        pass
 
 class Goatboy(GameObject):
     '''
@@ -44,8 +52,15 @@ class Goatboy(GameObject):
 
     def __init__(self, gameState):            # Initiera goatboy
         pygame.sprite.Sprite.__init__(self)   # Ladda en sprite
-        self.image, self.rect = gameLogic.load_image('goatboy.bmp', -1)
         # Ladda bilden pa goatboy
+        self.setimage('goatboy.bmp', -1)
+        screen_x, screen_y = gameState.screen.get_size()
+        self.x = screen_x / 2
+        self.y = screen_y / 2
+        self.topscroll = self.y - 150
+        self.bottomscroll = self.y + 150
+        self.leftscroll = self.x - 150
+        self.rightscroll = self.x + 150
 
     def update(self, gameState):
         gs = gameState
@@ -54,9 +69,7 @@ class Goatboy(GameObject):
         blockno = gs.thor.boneRect.collidelist(gs.map.blocks)
         if blockno != -1:
             touchedblock = gs.map.blocks[blockno]
-            #print touchedblock
         if touchedblock:
-            #print touchedblocks
             if gs.thor.dy > 0:             # Om man nuddar ett block pa vagen ner,
                 self.y = touchedblock.y + gs.scrolly - self.height + 2
                 gs.thor.dy = 0             # faller man inte langre nedat
@@ -268,7 +281,7 @@ class Flameboy(GameObject):
                     gs.map.addEnemy(enemy)
                     gameLogic.loadvisible(gs)
         if self.dy > 100:
-            print "flameboy fell down"
+            self.log("flameboy fell down")
             gs.map.enemies.remove(self)
             gameLogic.loadvisible(gs)
         if self.rect.collidelist(gs.map.blocks) != -1:
@@ -287,7 +300,7 @@ class Flameboy(GameObject):
         self.life = self.life - 1
         if self.life < 1:
             # if True: #random.randint(1,2) < 2:
-            print "Spawned upgrade"
+            self.log("Spawned upgrade")
             upgrade = Upgrade()
             upgrade.setposition(self.x, self.y - 100)
             gameState.map.addUpgrade(upgrade)
@@ -349,7 +362,6 @@ class Shot(GameObject):
             gs.shotsounds[n].stop()
             gs.shotsounds[n].play()
         playnoise(random.randint(0,len(gs.shotsounds) - 1))
-        #print gs.shotsound.get_volume()
         for filename in self.filenames:
             image, self.rect = gameLogic.load_image(filename, -1)
             self.images.append(image)
@@ -431,7 +443,6 @@ class Upgrade(GameObject):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.setimage(self.filename, -1)
-        # self.image, self.rect = gameLogic.load_image(self.filename, -1)
         self.dx, self.ddx, self.dy, self.ddy = 1, -1, 1, 0
         self.onGround = False
 
@@ -443,24 +454,24 @@ class Upgrade(GameObject):
         self.dx = self.dx + self.ddx
         if not self.onGround:
             self.dy = self.dy + 1
-            print "not on ground"
+            self.log("not on ground")
         else:
-            print "on ground"
+            self.log("on ground")
         #self.dy = -random.randint(4,7)
         if self.dx > self.limit or self.dx < -self.limit:
             self.ddx = -self.ddx
             self.limit = random.randint(4, 7)
             if self.onGround:
-                print "upgrade on ground"
+                self.log("upgrade on ground")
                 self.dy = -random.randint(5, 15)
         if self.dy > 100:
-            print "upgrade lost"
+            self.log("upgrade lost")
             gs.map.upgrades.remove(self)
             gameLogic.loadvisible(gs)
         if self.rect.collidelist(gs.map.blocks) != -1:
-            print "coliding with block"
+            self.log("coliding with block")
             if self.dy >= 0:
-                print "velocity less than zero"
+                self.log("velocity less than zero")
                 self.dy, self.ddy = 0, -random.randint(4,7)
                 self.onGround = True
         else:
@@ -473,4 +484,3 @@ class Upgrade(GameObject):
             gameLogic.loadvisible(gs)
 
         self.rect.topleft = self.x + gs.scrollx, self.y + gs.scrolly
-

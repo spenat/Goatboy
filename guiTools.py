@@ -3,6 +3,7 @@ Based on inputbox.py by Timothy Downs, changed a bit by Arvid for use in Goatboy
 
 @author: Timothy Downs
 @author: arvid
+@author: Mikael
 '''
 
 import pygame.font, pygame.event, pygame.draw, string
@@ -48,3 +49,18 @@ def ask(screen, question, prefill=""):
             current_string.append(chr(inkey))
         display_box(screen, question + ": " + string.join(current_string,""))
     return string.join(current_string,"")
+
+def display_boxes(screen, messages, width):
+    fontobject = pygame.font.Font(None,20)
+    pygame.draw.rect(screen, (0,0,0),
+                   ((screen.get_width() / 2) - width / 2,
+                    (screen.get_height() / 2) - 10 * len(messages),
+                    width, 24 * len(messages)), 0)
+    pygame.draw.rect(screen, (255,255,255),
+                   ((screen.get_width() / 2) - width / 2,
+                    (screen.get_height() / 2) - 10 * len(messages),
+                    width, 24 * len(messages)), 1)
+    for n, message in enumerate(messages):
+        screen.blit(fontobject.render(message, 1, (255,255,255)),
+                ((screen.get_width() / 2) - width / 2 + 20, (screen.get_height() / 2 - 8 * len(messages)) + n * 18))
+    pygame.display.flip()
