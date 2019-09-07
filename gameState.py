@@ -11,14 +11,20 @@ from pygame.locals import KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT, JO
 input_config = {
     'moveLeft': [276, 97],
     'moveRight': [275, 100],
-    'moveUp': [273],
-    'moveDown': [274],
+    'moveUp': [273, 119],
+    'moveDown': [274, 115],
     'jump': [273, 119],
     'saveMap': [112],
     'saveMapAs': [111],
     'newMap': [110],
     'shoot': [32, 102],
-    'quit': [27]
+    'quit': [27],
+    'shootButton': [1, 2, 5],
+    'jumpButton': [0, 4],
+    'quitButton': [3, 7],
+    'hatLeft': [4],
+    'hatRight': [2],
+    'hatStop': [0]
 }
 
 
@@ -42,7 +48,6 @@ class GameState(object):
     frameCounter = 0
     leveleditor = None
     map = None
-    mapname = None
     screen = None
     scrollx = 0
     scrolly = 0
@@ -98,6 +103,69 @@ class GameState(object):
 
 class PlayState(GameState):
 
+    def __init__(self):
+        self.init_action_map()
+
+    hat_map = {
+        (0, 0): 0, # stop
+        (0, 1): 1,
+        (1, 0): 2, # right
+        (1, 1): 3,
+        (-1, 0): 4, # left
+        (-1, -1): 5
+    }
+ 
+    def move_right(self):
+        self.thor.move_right()
+        return True
+
+    def move_left(self):
+        self.thor.move_left()
+        return True
+
+    def jump(self):
+        self.thor.move_up()
+        return True
+
+    def shoot(self):
+        self.thor.shooting = True
+        return True
+
+    def stop_moving(self):
+        self.thor.stop()
+        return True
+
+    def stop_shooting(self):
+        self.thor.shooting = False
+        return True
+
+    def quit(self):
+        return False
+
+    def init_action_map(self):
+        action_map = {
+            (KEYDOWN, 'moveRight') : self.move_right,
+            (KEYDOWN, 'moveLeft') : self.move_left,
+            (KEYDOWN, 'jump') : self.jump,
+            (KEYDOWN, 'quit') : self.quit,
+            (KEYDOWN, 'shoot') : self.shoot,
+            (KEYUP, 'moveRight') : self.stop_moving,
+            (KEYUP, 'moveLeft') : self.stop_moving,
+            (KEYUP, 'shoot') : self.stop_shooting,
+            (JOYBUTTONDOWN, 'shootButton') : self.shoot,
+            (JOYBUTTONDOWN, 'jumpButton') : self.jump,
+            (JOYBUTTONDOWN, 'quitButton') : self.quit,
+            (JOYBUTTONUP, 'shootButton') : self.stop_shooting,
+            (JOYHATMOTION, 'hatLeft') : self.move_left,
+            (JOYHATMOTION, 'hatRight') : self.move_right,
+            (JOYHATMOTION, 'hatStop') : self.stop_moving,
+        }
+        new_action_map = {}
+        for key in action_map.keys():
+            for int_key in input_config[key[1]]:
+                new_action_map[(key[0], int_key)] = action_map[key]
+        self.action_map = new_action_map
+
     def init_sound(self):
         pygame.mixer.init()
         self.tracks = []
@@ -118,7 +186,7 @@ class PlayState(GameState):
         self.successound = pygame.mixer.Sound(os.path.join("data","door.wav"))
 
     def init_map(self, mapName):
-        self.map = mapLogic.Map()     # skapa ett map-objekt
+        self.map = mapLogic.Map() # skapa ett map-objekt
         self.map.loadmap(mapName) # ladda banan fran fil
 
     def init_controllables(self):
@@ -126,61 +194,17 @@ class PlayState(GameState):
         self.thor = Goatboy(self)
 
     def handleInput(self, events):
-        thor = self.thor
         for event in events:
-            if event.type == QUIT:
-                return False
-            elif event.type == KEYDOWN:
-                if event.key in input_config['moveRight']:         # Tryck hoger lr d
-                    thor.move_right()
-                elif event.key in input_config['moveLeft']:        # Tryck vanster lr a
-                    thor.move_left()
-                #elif event.key in :                    # Tryck ner
-                #    thor.move_down()
-                elif event.key in input_config['jump']:        # Tryck upp lr w
-                    thor.move_up()
-                elif event.key == 120:
-                    # Tryck x for att andra spridning pa skotten
-                    thor.changeweapon()
-                    changesound()
-                elif event.key in input_config['quit']:        # Tryck escape
-                    return False
-                elif event.key in input_config['shoot']:        # Tryck space for SKJUT!
-                    thor.shooting = True
-                else:
-                    print event
-            elif event.type == KEYUP:
-                if event.key in input_config['moveRight'] + input_config['moveLeft']:
-                # Lyft hoger eller vanster
-                    thor.stop()
-                elif event.key in input_config['shoot']:
-                    thor.shooting = False
-            elif event.type == JOYBUTTONDOWN:
-                if event.button == 0:
-                   thor.shooting = True
-                   self.shotsounds[random.randint(0, len(self.shotsounds) - 1)].play()
-                if event.button == 1:
-                   thor.move_up()
-                if event.button == 5:
-                   thor.changeweapon()
-                   changesound()
-                else:
-                   print event
-            elif event.type == JOYBUTTONUP:
-                if event.button == 0:
-                   thor.shooting = False
-                else:
-                   print event
-            elif event.type == JOYHATMOTION:
-                v1, v2 = event.value
-                if v1 == 1 and v2 == 0:
-                   thor.move_right()
-                elif v1 == 0 and v2 == 0:
-                   thor.stop()
-                elif v1 == -1 and v2 == 0:
-                   thor.move_left()
-                elif v1 == 0 and v2 == 1:
-                   thor.move_up()
+            try:
+                if hasattr(event, 'key'):
+                    return self.action_map[(event.type, event.key)]()
+                elif hasattr(event, 'button'):
+                    return self.action_map[(event.type, event.button)]()
+                elif hasattr(event, 'value'):
+                    return self.action_map[(event.type, self.hat_map[event.value])]()
+            except Exception as e:
+                print e
+                print event
         return True
 
 
@@ -221,6 +245,8 @@ class MenuState(GameState):
                         guiTools.display_boxes(self.background, gameLogic.highscore(2).split("\n")[:-2], 500)
                         return True
                     return False
+                else:
+                    print event
         return True
 
 
@@ -268,5 +294,4 @@ class EditState(GameState):
                 else:
                     self.scrollx = self.scrollx + ((self.screen.get_width() / 2 - event.pos[0]) / 100)
                     self.scrolly = self.scrolly + ((self.screen.get_height() / 2 - event.pos[1]) / 100)
-                    print "{} : {} ".format(self.scrollx, self.scrolly)
         return True
