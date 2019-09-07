@@ -38,8 +38,9 @@ class Goatboy(GameObject):
     weapon = 1
     dx = 0    # Goatboys momentana hastighet i x-led
     dy = 0    # -"- y-led
-    ddx = 0 # Goatboys acceleration i x-led
-    boneRect = pygame.Rect(x + 30, y + height, 22, 1)    # boneRect is his feets that are collition tested againts ground later on
+    ddx = 0   # Goatboys acceleration i x-led
+    boneRect = pygame.Rect(x + 30, y + height, 22, 1)
+    # boneRect is his feets that are collition tested againts ground later on
 
     def __init__(self, gameState):            # Initiera goatboy
         pygame.sprite.Sprite.__init__(self)   # Ladda en sprite
@@ -60,17 +61,11 @@ class Goatboy(GameObject):
                 self.y = touchedblock.y + gs.scrolly - self.height + 2
                 gs.thor.dy = 0             # faller man inte langre nedat
                 gs.thor.onGround = True    # och har fotterna pa fast mark.
-                #self.dx = gs.map.blocks[touchedblock].dx
 
-            if touchedblock.dx != 0:
-                if self.dx == 0 and self.ddx == 0:
-                    self.dx = touchedblock.dx
-                elif self.dx == 0 and self.ddx != 0:
-                    self.dx = touchedblock.dx
-                elif self.dx != 0 and self.ddx == 0:
-                    self.dx = touchedblock.dx
-                else:
-                    self.dx = touchedblock.dx + self.ddx*8
+            # If goatboy is on a moving block, he should be moving along with it
+            if self.ddx == 0:
+                self.dx = touchedblock.dx
+
         else:
             gs.thor.onGround = False
             # nuddar man inget block, star man inte pa marken
@@ -85,12 +80,18 @@ class Goatboy(GameObject):
             gs.map.doors[gs.thor.rect.collidelist(gs.map.doors)].open(gs)
             # Oppna dorren
 
+        if touchedblock:
+            if self.dx - touchedblock.dx < self.maxspeed and self.dx - touchedblock.dx > -self.maxspeed:
+                self.dx = self.dx + self.ddx
+        else:
+            if self.dx < self.maxspeed and self.dx > -self.maxspeed:
+            # Om goatboys maxhastiget inte ar mott,
+                self.dx = self.dx + self.ddx
+                # oka hans hastighet med hans acceleration
+
+
 
         self.x = self.x + self.dx    # Flytta goatboy i hans horisontella hastighet
-        if self.dx < self.maxspeed and self.dx > -self.maxspeed:
-        # Om goatboys maxhastiget inte ar mott,
-            self.dx = self.dx + self.ddx
-            # oka hans hastighet med hans acceleration
 
         self.y = self.y + self.dy
         # Flytta goatboy i hans vertikala hastighet
@@ -129,9 +130,6 @@ class Goatboy(GameObject):
         if not self.onGround:
             self.dy = self.dy + 1
 
-        #If goatboy is on a moving block, he should be moving along with it
-        if self.onGround:
-            pass
 
         self.rect.topleft = self.x, self.y # Satt goatboys sprite till hans nya koordinater
         self.boneRect = pygame.Rect(self.x + 30, self.y + 74, 22, 1)    # Flytta fotterna efter de nya koordinaterna
@@ -139,6 +137,11 @@ class Goatboy(GameObject):
     def die(self, gameState):
         gameState.deathsound.stop()
         gameState.deathsound.play()
+        if self.weapon > 1:
+            self.weapon = 1
+            self.setimage("goatboy.bmp", -1)
+            if not self.turnedRight:
+                self.image = pygame.transform.flip(self.image, 1, 0)
         gameLogic.reset(gameState)
 
     def move_right(self):
@@ -180,7 +183,15 @@ class Goatboy(GameObject):
         return self.x
 
     def changeweapon(self):
-        pass #self.weapon = (self.weapon + 2) % 16
+        pass # self.weapon = (self.weapon + 2) % 16
+
+    def upgrade_weapon(self):
+        if self.weapon < 16:
+            self.weapon += 1
+            if self.weapon == 6:
+                self.setimage("goatboy2.bmp", -1)
+                if not self.turnedRight:
+                    self.image = pygame.transform.flip(self.image, 1, 0)
 
     def get_y(self):
         return self.y
@@ -419,7 +430,8 @@ class Upgrade(GameObject):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = gameLogic.load_image(self.filename, -1)
+        self.setimage(self.filename, -1)
+        # self.image, self.rect = gameLogic.load_image(self.filename, -1)
         self.dx, self.ddx, self.dy, self.ddy = 1, -1, 1, 0
         self.onGround = False
 
@@ -454,13 +466,11 @@ class Upgrade(GameObject):
         else:
             self.onGround = False
         if gs.thor.rect.collidelist([self]) != -1:
-            if gs.thor.weapon < 16:
-                gs.changesound.stop()
-                gs.changesound.play()
-                gs.thor.weapon += 1
-                gs.thor.setimage("goatboy2.bmp", -1)
-                gs.map.upgrades.remove(self)
-                gameLogic.loadvisible(gs)
+            gs.changesound.stop()
+            gs.changesound.play()
+            gs.thor.upgrade_weapon()
+            gs.map.upgrades.remove(self)
+            gameLogic.loadvisible(gs)
 
         self.rect.topleft = self.x + gs.scrollx, self.y + gs.scrolly
 
