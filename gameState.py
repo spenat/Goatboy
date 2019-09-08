@@ -24,10 +24,24 @@ input_config = {
     'quitButton': [3, 7],
     'hatLeft': [4],
     'hatRight': [2],
-    'hatStop': [0]
+    'hatStop': [0],
+    'hatUp': [1],
+    'hatDown': [6],
+    'mouseLeft': [1],
+    'mouseRight': [3],
+    'mouseMotion': [0]
 }
 
-
+hat_map = {
+    (0, 0): 0, # stop
+    (0, 1): 1, # up
+    (1, 0): 2, # right
+    (1, 1): 3,
+    (-1, 0): 4, # left
+    (-1, -1): 5,
+    (0, -1): 6 # down
+}
+ 
 class GameState(object):
     '''
     This class holds the state of the game.
@@ -91,14 +105,30 @@ class GameState(object):
         pass
 
     def handleInput(self, events):
-        print events
         for event in events:
-            if event.type == QUIT:
-                return False
-            elif event.type == KEYDOWN:
-                if event.key in input_config['quit']:
-                    return False
+            try:
+                if hasattr(event, 'key'):
+                    return self.action_map[(event.type, event.key)]()
+                elif hasattr(event, 'button'):
+                    return self.action_map[(event.type, event.button)]()
+                elif hasattr(event, 'value'):
+                    return self.action_map[(event.type, hat_map[event.value])]()
+                elif hasattr(event, 'pos'):
+                    return self.action_map[(event.type, 0)](event.pos)
+            except Exception as e:
+                print e
+                print event
         return True
+
+    def generate_actionmap(self, action_map):
+        new_action_map = {}
+        for key in action_map.keys():
+            for int_key in input_config[key[1]]:
+                new_action_map[(key[0], int_key)] = action_map[key]
+        return new_action_map
+
+    def quit(self):
+        return False
 
 
 class PlayState(GameState):
@@ -106,15 +136,6 @@ class PlayState(GameState):
     def __init__(self):
         self.init_action_map()
 
-    hat_map = {
-        (0, 0): 0, # stop
-        (0, 1): 1,
-        (1, 0): 2, # right
-        (1, 1): 3,
-        (-1, 0): 4, # left
-        (-1, -1): 5
-    }
- 
     def move_right(self):
         self.thor.move_right()
         return True
@@ -139,9 +160,6 @@ class PlayState(GameState):
         self.thor.shooting = False
         return True
 
-    def quit(self):
-        return False
-
     def init_action_map(self):
         action_map = {
             (KEYDOWN, 'moveRight') : self.move_right,
@@ -160,11 +178,7 @@ class PlayState(GameState):
             (JOYHATMOTION, 'hatRight') : self.move_right,
             (JOYHATMOTION, 'hatStop') : self.stop_moving,
         }
-        new_action_map = {}
-        for key in action_map.keys():
-            for int_key in input_config[key[1]]:
-                new_action_map[(key[0], int_key)] = action_map[key]
-        self.action_map = new_action_map
+        self.action_map = self.generate_actionmap(action_map)
 
     def init_sound(self):
         pygame.mixer.init()
@@ -193,30 +207,67 @@ class PlayState(GameState):
         from gameObjects import Goatboy
         self.thor = Goatboy(self)
 
-    def handleInput(self, events):
-        for event in events:
-            try:
-                if hasattr(event, 'key'):
-                    return self.action_map[(event.type, event.key)]()
-                elif hasattr(event, 'button'):
-                    return self.action_map[(event.type, event.button)]()
-                elif hasattr(event, 'value'):
-                    return self.action_map[(event.type, self.hat_map[event.value])]()
-            except Exception as e:
-                print e
-                print event
-        return True
-
 
 class MenuState(GameState):
 
     current = 0
-    alternatives = ['New Game', 'Editor', 'Options', 'Highscore', 'Quit']
+    top_menu = ['New Game', 'Editor', 'Options', 'Highscore', 'Quit']
+    options = ["Display", "Sound", "Controls", "Back to Menu"]
     pointer = '- - '
+
+    def __init__(self):
+        self.init_action_map()
+        self.alternatives = self.top_menu
 
     def init_display(self):
         super(MenuState, self).init_display()
         self.update_menu()
+
+    def init_action_map(self):
+        action_map = {
+            (KEYDOWN, 'moveRight') : self.select_item,
+            (KEYDOWN, 'moveLeft') : self.quit,
+            (KEYDOWN, 'moveDown') : self.next_item,
+            (KEYDOWN, 'moveUp') : self.prev_item,
+            (KEYDOWN, 'jump') : self.select_item,
+            (KEYDOWN, 'quit') : self.quit,
+            (KEYDOWN, 'shoot') : self.select_item,
+            (JOYBUTTONDOWN, 'shootButton') : self.select_item,
+            (JOYBUTTONDOWN, 'jumpButton') : self.select_item,
+            (JOYBUTTONDOWN, 'quitButton') : self.quit,
+            (JOYHATMOTION, 'hatLeft') : self.quit,
+            (JOYHATMOTION, 'hatRight') : self.select_item,
+            (JOYHATMOTION, 'hatDown') : self.next_item,
+            (JOYHATMOTION, 'hatUp') : self.prev_item,
+        }
+        self.action_map = self.generate_actionmap(action_map)
+
+    def next_item(self):
+        self.current = (self.current + 1) % len(self.alternatives)
+        self.update_menu()
+        return True
+
+    def prev_item(self):
+        self.current = (self.current - 1) % len(self.alternatives)
+        self.update_menu()
+        return True 
+
+    def select_item(self):
+        if self.alternatives[self.current] == "Highscore":
+            guiTools.display_boxes(self.background, gameLogic.highscore(2).split("\n")[:-2], 500)
+            return True
+        elif self.alternatives[self.current] == "Options":
+            self.top_menu = self.alternatives
+            self.alternatives = self.options
+            self.current = 0
+            self.update_menu()
+            return True
+        elif self.alternatives[self.current] == "Back to Menu":
+            self.alternatives = self.top_menu 
+            self.current = 0
+            self.update_menu()
+            return True
+        return False
 
     def update_menu(self):
         current_menu = []
@@ -227,31 +278,12 @@ class MenuState(GameState):
                 current_menu.append(alt)
         guiTools.display_boxes(self.background, current_menu, 300)
 
-    def handleInput(self, events):
-        for event in events:
-            if event.type == QUIT:
-                return False
-            elif event.type == KEYDOWN:
-                if event.key in input_config['quit']:
-                    return False
-                elif event.key in input_config['moveUp']:
-                    self.current = (self.current - 1) % len(self.alternatives)
-                    self.update_menu()
-                elif event.key in input_config['moveDown']:
-                    self.current = (self.current + 1) % len(self.alternatives)
-                    self.update_menu()
-                elif event.key in input_config['shoot'] + input_config['moveRight']:
-                    if self.alternatives[self.current] == 'Highscore':
-                        guiTools.display_boxes(self.background, gameLogic.highscore(2).split("\n")[:-2], 500)
-                        return True
-                    return False
-                else:
-                    print event
-        return True
-
 
 class EditState(GameState):
 
+    def __init__(self):
+        self.init_action_map()
+ 
     def init_map(self, mapName):
         self.map = mapLogic.Map()     # skapa ett map-objekt
         self.map.loadmap(mapName) # ladda banan fran fil
@@ -261,37 +293,67 @@ class EditState(GameState):
         from levelEditor import LevelEditor
         self.leveleditor = LevelEditor()
 
-    def handleInput(self, events):
-        leveleditor = self.leveleditor
-        for event in events:
-            if event.type == QUIT:
-                return False
-            elif event.type == KEYDOWN:
-                if event.key in input_config['quit']:        # Tryck escape
-                    return False
-                elif event.key in input_config['saveMap']:        # Tryck p for save current map
-                    self.map.savemap(os.path.join('data', self.map.name))
-                elif event.key in input_config['saveMapAs']:      # Tryck o for save-as current map
-                    self.map.savemapAs(self)
-                elif event.key in input_config['newMap']:      # Tryck n for att borja bygga pa en tom, ny karta.
-                    self.map.newMapFromScratch(self)
-                elif event.key in input_config['shoot']:
-                    self.move_map = True
-            elif event.type == KEYUP:
-                if event.key in input_config['shoot']:
-                    self.move_map = False
-            if event.type == MOUSEBUTTONDOWN:
-                if event.button == 1:
-                # Tryck vanster musknapp for skapa valt objekt
-                    leveleditor.createGO(self)
-                elif event.button == 3:
-                # Tryck hoger  mosknapp for vaxla objekt
-                    leveleditor.changeGO()
-            elif event.type == MOUSEMOTION:
-                if not self.move_map:
-                    leveleditor.setposition(event.pos[0], event.pos[1])
-                    # muspekaren flyttar leveleditorn
-                else:
-                    self.scrollx = self.scrollx + ((self.screen.get_width() / 2 - event.pos[0]) / 100)
-                    self.scrolly = self.scrolly + ((self.screen.get_height() / 2 - event.pos[1]) / 100)
+    def init_action_map(self):
+        action_map = {
+            (KEYDOWN, 'moveRight') : self.move_right,
+            (KEYDOWN, 'moveLeft') : self.move_left,
+            (KEYDOWN, 'moveUp') : self.move_up,
+            (KEYDOWN, 'moveDown') : self.move_down,
+            (KEYDOWN, 'shoot') : self.move_map,
+            (KEYDOWN, 'saveMap') : self.save_map,
+            (KEYDOWN, 'quit') : self.quit,
+            (KEYUP, 'shoot') : self.stop_moving_map,
+            (JOYBUTTONDOWN, 'quitButton') : self.quit,
+            (JOYHATMOTION, 'hatLeft') : self.move_left,
+            (JOYHATMOTION, 'hatRight') : self.move_right,
+            (JOYHATMOTION, 'hatUp') : self.move_up,
+            (JOYHATMOTION, 'hatDown') : self.move_down,
+            (MOUSEBUTTONDOWN, 'mouseLeft') : self.create_gameobject,
+            (MOUSEBUTTONDOWN, 'mouseRight') : self.change_gameobject,
+            (MOUSEMOTION, 'mouseMotion') : self.mouse_move
+        }
+        self.action_map = self.generate_actionmap(action_map)
+
+    def create_gameobject(self):
+        self.leveleditor.createGO(self)
+        return True
+
+    def change_gameobject(self):
+        self.leveleditor.changeGO()
+        return True
+
+    def save_map(self):
+        self.map.savemap(os.path.join('data', self.map.name))
+        return True
+
+    def move_up(self):
+        self.scrolly += 100
+        return True
+
+    def move_right(self):
+        self.scrollx += -100
+        return True
+
+    def move_down(self):
+        self.scrolly += -100
+        return True
+
+    def move_left(self):
+        self.scrollx += 100
+        return True
+
+    def move_map(self):
+        self.move_map = True
+        return True
+
+    def stop_moving_map(self):
+        self.move_map = False
+        return True
+
+    def mouse_move(self, pos):
+        if not self.move_map:
+            self.leveleditor.setposition(pos[0], pos[1])
+        else:
+            self.scrollx = self.scrollx + ((self.screen.get_width() / 2 - pos[0]) / 50)
+            self.scrolly = self.scrolly + ((self.screen.get_height() / 2 - pos[1]) / 50)
         return True
