@@ -116,8 +116,8 @@ class GameState(object):
                 elif hasattr(event, 'pos'):
                     return self.action_map[(event.type, 0)](event.pos)
             except Exception as e:
-                print e
-                print event
+                print(f'exception : {e}')
+                print(event)
         return True
 
     def generate_actionmap(self, action_map):

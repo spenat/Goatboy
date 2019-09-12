@@ -13,17 +13,21 @@ def initializeGame(gameState):
     gs = gameState
 
     pygame.init()
+    driver = pygame.display.get_driver()
+    info = pygame.display.Info()
+    print(f'driver : {driver}')
+    print(f'info : {info}')
     pygame.joystick.init() #initialise joystick/gamepad
     if pygame.joystick.get_count() > 0:
-       print "Gamepad found!"
+       print("Gamepad found!")
        gs.gamepads = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
-       print gs.gamepads
+       print(gs.gamepads)
        for gp in gs.gamepads:
-          print gp
+          print(gp)
           gp.init()
-          print gp.get_init()
+          print(gp.get_init())
     # resolution = (1366, 768)
-    print pygame.display.list_modes()
+    print(pygame.display.list_modes())
     gs.init_sound()
     gs.init_display()
     gs.init_clock()
@@ -38,9 +42,9 @@ def initializeGame(gameState):
 def endGame(gameState):
     playingTime = time.time() - gameState.startingTime
 
-    print "You played the game for %i seconds, during which %i frames were rendered. That gives an average FPS of %i \n" % (playingTime, gameState.frameCounter, gameState.frameCounter/playingTime)
+    print("You played the game for %i seconds, during which %i frames were rendered. That gives an average FPS of %i \n" % (playingTime, gameState.frameCounter, gameState.frameCounter/playingTime))
 
-    print gameLogic.highscore(gameState.scoore)
+    print(gameLogic.highscore(gameState.scoore))
 
 
 def main():

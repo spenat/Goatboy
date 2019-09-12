@@ -136,17 +136,17 @@ class Map():
         self.initdoors = []
         f = open(os.path.join('data', filename), 'r')
         for line in f:
-            entity = string.split(line, ':')
+            entity = line.split(':')
             if entity[0] == 'block':
                 block = gameObjects.Block()
                 block.setposition(int(entity[1]), int(entity[2]))
                 block.setlimits(int(entity[3]), int(entity[4]))
                 block.setdx(int(entity[5]))
                 transparents = ['blockgrass.bmp', 'coin.bmp', 'stone.bmp']
-                if string.strip(entity[6]) in transparents:
-                    block.setimage(string.strip(entity[6]), -1)
+                if entity[6].strip() in transparents:
+                    block.setimage(entity[6].strip(), -1)
                 else:
-                    block.setimage(string.strip(entity[6]), None)
+                    block.setimage(entity[6].strip(), None)
                 self.addBlock(block)
             elif entity[0] == 'flamenemy':
                 if len(entity) > 3:
@@ -161,5 +161,5 @@ class Map():
             elif entity[0] == 'door':
                 door = gameObjects.Door()
                 door.setposition(int(entity[1]), int(entity[2]))
-                door.targetMap = string.strip(entity[3])
+                door.targetMap = entity[3].strip()
                 self.addDoor(door)

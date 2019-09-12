@@ -22,7 +22,7 @@ class GameObject(pygame.sprite.Sprite):
         self.image, self.rect = gameLogic.load_image(imagename, colorkey)
 
     def log(self, log_string):
-        #print log_string
+        # print(log_string)
         pass
 
 class Goatboy(GameObject):

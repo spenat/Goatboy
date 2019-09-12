@@ -36,9 +36,9 @@ def load_image(name, colorkey=None):
     fullname = os.path.join('data', name)
     try:
         image = pygame.image.load(fullname)
-    except pygame.error, message:
-        print "Cannot load image:", name
-        raise SystemExit, message
+    except pygame.error as message:
+        print("Cannot load image:", name)
+        raise SystemExit(message)
     image = image.convert()
     if colorkey is not None:
         if colorkey is - 1:
@@ -67,7 +67,7 @@ def highscore(score):
     highscoreList = []
     f = open(os.path.join('data', "highscore.csv"), 'r')
     for line in f:
-        entry = string.split(line, ',')
+        entry = line.split(',')
         highscoreList.append( (entry[0], entry[1], entry[2] ) )
     f.close()
     sortedHighscores = sorted(highscoreList, key=lambda score: int(score[0]), reverse=True)
@@ -80,7 +80,7 @@ def highscore(score):
         returnString += str(rank).rjust(5) + scoreLine[0].rjust(8) + scoreLine[1].rjust(20) + scoreLine[2].rjust(23)
         returnString += "\n"
         if rank == 9:
-            lowestOnList = scoreLine[0]
+            lowestOnList = int(scoreLine[0])
             break
 
     if score < lowestOnList:
