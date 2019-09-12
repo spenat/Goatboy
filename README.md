@@ -1,12 +1,12 @@
 ###	Goatboy
 
-###### Run:
+##### Run:
 
 ```
 python goatboyRunner.py
 ```
 
-#### Dependencies:
+##### Dependencies:
 Python 3
 
 pygame 1.9.0
