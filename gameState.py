@@ -9,11 +9,11 @@ from pygame.locals import KEYDOWN, KEYUP, MOUSEBUTTONDOWN, MOUSEMOTION, QUIT, JO
 
 
 input_config = {
-    'moveLeft': [276, 97],
-    'moveRight': [275, 100],
-    'moveUp': [273, 119],
-    'moveDown': [274, 115],
-    'jump': [273, 119],
+    'moveLeft': [276, 97, 1073741904],
+    'moveRight': [275, 100, 1073741903],
+    'moveUp': [273, 119, 1073741906],
+    'moveDown': [274, 115, 1073741905],
+    'jump': [273, 119, 1073741906, 1073742048],
     'saveMap': [112],
     'saveMapAs': [111],
     'newMap': [110],
@@ -76,13 +76,14 @@ class GameState(object):
         pass
 
     def init_display(self):
-        resolution = pygame.display.list_modes()[1]
+        resolution = pygame.display.list_modes()[0]
         self.window = pygame.display.set_mode(resolution)
         self.screen = pygame.display.get_surface() # Skarmyta
 
         flags = self.screen.get_flags()
         if self.fullscreen:
-            self.window = pygame.display.set_mode(resolution, flags^FULLSCREEN)
+            self.window = pygame.display.set_mode(resolution, flags^pygame.FULLSCREEN^pygame.HWSURFACE^pygame.DOUBLEBUF)
+        # self.window = pygame.display.set_mode(resolution, flags^pygame.OPENGL)
         self.back_file_name = os.path.join("data", "bg2.png") # bakgrundsfilnamnsokvag
         self.back_surface = pygame.image.load(self.back_file_name)
         self.back_surface = pygame.transform.scale(self.back_surface,self.screen.get_size())
@@ -253,7 +254,7 @@ class MenuState(GameState):
 
     def select_item(self):
         if self.alternatives[self.current] == "Highscore":
-            guiTools.display_boxes(self.background, gameLogic.highscore(2).split("\n")[:-2], 500)
+            guiTools.display_boxes(self.background, gameLogic.load_highscore().split("\n")[:-2], 500)
             return True
         elif self.alternatives[self.current] == "Options":
             self.top_menu = self.alternatives

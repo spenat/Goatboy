@@ -48,11 +48,12 @@ def endGame(gameState):
 
 
 def main():
+    current_state = None
     play_state = None
-    edit_state = gameState.EditState()
+    edit_state = None # gameState.EditState()
     menu_state = gameState.MenuState()
 
-    initializeGame(edit_state)
+    # initializeGame(edit_state)
     initializeGame(menu_state)
 
     running = True
@@ -61,30 +62,39 @@ def main():
         if play_state:
             menu_state.background = play_state.screen
             menu_state.update_menu()
-        while eventLoop.proceed(menu_state):              # The condition of this while-loop is where
-            menu_state.frameCounter = menu_state.frameCounter + 1 # the games is actually taking place
+            pygame.mixer.music.pause()
+        elif edit_state:
+            menu_state.background = edit_state.screen
+            menu_state.update_menu()
+        while eventLoop.proceed(menu_state):
+            menu_state.frameCounter = menu_state.frameCounter + 1
 
         if menu_state.alternatives[menu_state.current] == 'New Game':
             play_state = gameState.PlayState()
-            initializeGame(play_state)           # Initialize a new game in the state object
+            initializeGame(play_state) # Initialize a new game in the state object
             current_state = play_state
             if menu_state.alternatives[0] == 'New Game':
                 menu_state.alternatives = ['Resume Game'] + menu_state.alternatives
                 menu_state.update_menu()
         elif menu_state.alternatives[menu_state.current] == 'Resume Game':
             current_state = play_state
+            pygame.mixer.music.unpause()
         elif menu_state.alternatives[menu_state.current] == 'Editor':
+            if not edit_state:
+                edit_state = gameState.EditState()
+                initializeGame(edit_state)
             current_state = edit_state
             if play_state:
                 edit_state.init_map(play_state.map.name)
             gameLogic.loadvisible(edit_state)
-            pygame.mixer.music.fadeout(1000)
-            pygame.mixer.music.stop()
+            #pygame.mixer.music.fadeout(1000)
+            #pygame.mixer.music.stop()
+            pygame.mixer.music.pause()
         elif menu_state.alternatives[menu_state.current] == 'Quit':
             running = False
 
-        while running and eventLoop.proceed(current_state):              # The condition of this while-loop is where
-            current_state.frameCounter = current_state.frameCounter + 1 # the games is actually taking place
+        while running and current_state and eventLoop.proceed(current_state):
+            current_state.frameCounter = current_state.frameCounter + 1
 
     if play_state:
         endGame(play_state)

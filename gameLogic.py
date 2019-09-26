@@ -87,6 +87,28 @@ def highscore(score):
         returnString += "\nSorry pal, a score of just %i points doesn't cut it anymore.\n" % score
     return returnString
 
+def load_highscore():
+    returnString = ""
+    highscoreList = []
+    f = open(os.path.join('data', "highscore.csv"), 'r')
+    for line in f:
+        entry = line.split(',')
+        highscoreList.append( (entry[0], entry[1], entry[2] ) )
+    f.close()
+    sortedHighscores = sorted(highscoreList, key=lambda score: int(score[0]), reverse=True)
+
+    returnString += " Rank | Score  |       Name        |     Time/date    \n"
+    returnString += "------------------------------------------------------\n"
+    lowestOnList = 0
+    for rank, scoreLine in enumerate(sortedHighscores):
+        returnString += str(rank).rjust(5) + scoreLine[0].rjust(8) + scoreLine[1].rjust(20) + scoreLine[2].rjust(23)
+        returnString += "\n"
+        if rank == 9:
+            lowestOnList = int(scoreLine[0])
+            break
+    return returnString
+
+
 def getHighestMapNumber():
     ''' Raden nedan gor foljande:
     1. Plockar fram en lista pa alla filer med  i katalogen 'data' med andelsen '.map'
